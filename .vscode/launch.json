@@ -1,0 +1,33 @@
+{
+  // IntelliSense を使用して利用可能な属性を学べます。
+  // 既存の属性の説明をホバーして表示します。
+  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python Django 2",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/workspace/django_sql/manage.py",
+      "args": [
+        "runserver",
+        "0.0.0.0:8001"
+      ],
+      "django": true,
+      "justMyCode": true
+    },
+    {
+      "name": "Python Django",
+      "type": "python",
+      "request": "launch",
+      "program": "manage.py",
+      "args": [
+        "runserver",
+        "0.0.0.0:8001"
+      ],
+      "cwd": "${workspaceFolder}/workspace/django_sql",
+      "django": true,
+      "justMyCode": true
+    }
+  ]
+}

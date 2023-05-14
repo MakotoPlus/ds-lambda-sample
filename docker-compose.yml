@@ -25,7 +25,7 @@ services:
     container_name: 'django_sql'
     
     # コンテナ内のワーキングディレクトリ
-    working_dir: '/workspace/django_sql'
+    working_dir: '/project/workspace/django_sql'
     
     # コンテナを終了させたくない場合に設定
     tty: true
@@ -34,7 +34,7 @@ services:
     
     # ローカルフォルダとコンテナ内のマウントディレクトリの関連づけ
     volumes:
-      - ./workspace:/workspace
+      - ./:/project
     # PORT開放
     expose:
       - 8000

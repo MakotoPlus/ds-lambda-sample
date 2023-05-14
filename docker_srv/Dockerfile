@@ -1,9 +1,11 @@
 FROM python:3.8
 USER root
 
-ENV DOCKER_DIR="./docker_srv"
-ENV SOURCE_DIR="./workspace"
-ENV WORK_DIR="/workspace"
+ENV HOST_COPY_DIR=.
+ENV DOCKER_COPY_DIR=/project
+ENV DOCKER_DIR=./docker_srv
+#ENV SOURCE_DIR=./workspace
+ENV WORK_DIR=/project/workspace/django_sql
 ENV SSH=./docker_srv/.ssh
 
 RUN apt-get update && \
@@ -27,12 +29,11 @@ RUN pip install -r ./requirements.txt
 COPY $SSH /root/.ssh
 RUN chmod 0600 /root/.ssh/*
 
+COPY $HOST_COPY_DIR $DOCKER_COPY_DIR
 WORKDIR $WORK_DIR
+RUN python manage.py migrate
+#RUN python manage.py collectstatic
 EXPOSE 8000
-
 # Django起動
-#CMD ["python", "/workspace/django_sql/manage.py", "runserver", "0.0.0.0:8000"]
-
-#CMD ["uwsgi", "--socket", ":8000", "--chdir", "/workspace/deposit_srv", "--wsgi-file", "deposit_srv/wsgi.py"]
-#CMD ["uwsgi", "--socket", ":8000", "--chdir", "/workspace/deposit_srv", "--wsgi-file", "env/wsgi.py"]
+CMD ["uwsgi", "--http", "0.0.0.0:8000", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
 
