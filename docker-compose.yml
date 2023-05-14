@@ -10,7 +10,7 @@ services:
     build:
         context: .
         dockerfile: ./docker_srv/Dockerfile
-
+    image: django_sql_img
     # DEV UWSGI起動
     # command: uwsgi --socket :8000 --chdir /workspace/deposit_srv --wsgi-file deposit_srv/wsgi.py
     # PROD UWSGI起動
@@ -19,10 +19,10 @@ services:
     # command: python /workspace/django_sql/django_sql/manage.py runserver 0.0.0.0:8000
 
     # Hostname
-    hostname: django_sql_srv
+    hostname: django_sql_host
 
     # コンテナ名
-    container_name: 'django_sql'
+    container_name: 'django_sql_container'
     
     # コンテナ内のワーキングディレクトリ
     working_dir: '/project/workspace/django_sql'
