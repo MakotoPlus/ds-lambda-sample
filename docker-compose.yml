@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  django_sql:
+    # os起動時(Docker起動時)にコンテナを再起動さる場合
+    # restart: always
+    
+    # ComposeFileを実行しビルドされるときのルートパス
+    # このフォルダにDockerファイルを置く
+    build:
+        context: .
+        dockerfile: ./docker_srv/Dockerfile
+
+    # DEV UWSGI起動
+    # command: uwsgi --socket :8000 --chdir /workspace/deposit_srv --wsgi-file deposit_srv/wsgi.py
+    # PROD UWSGI起動
+    #command: uwsgi --socket :8001 --chdir /workspace/deposit_srv --wsgi-file env/wsgi.py --master --processes 4 --threads 2
+    # Django 単独起動
+    # command: python /workspace/django_sql/django_sql/manage.py runserver 0.0.0.0:8000
+
+    # Hostname
+    hostname: django_sql_srv
+
+    # コンテナ名
+    container_name: 'django_sql'
+    
+    # コンテナ内のワーキングディレクトリ
+    working_dir: '/workspace/django_sql'
+    
+    # コンテナを終了させたくない場合に設定
+    tty: true
+    ports:
+      - 8000:8000
+    
+    # ローカルフォルダとコンテナ内のマウントディレクトリの関連づけ
+    volumes:
+      - ./workspace:/workspace
+    # PORT開放
+    expose:
+      - 8000

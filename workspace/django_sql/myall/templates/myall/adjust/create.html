@@ -1,0 +1,10 @@
+<html>
+<body>
+  Create</br>
+  <form method="POST"> {% csrf_token %}
+    {{ form.as_p }}
+    <button class="form-control btn btn-primary" type="submit">登録</button>  
+  </form>
+
+</body>
+</html>

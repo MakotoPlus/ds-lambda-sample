@@ -1,0 +1,10 @@
+<html>
+  <body>
+    Many2Many</br>
+    <ul>
+    {% for r in object_list %}
+      <li>{{r.pk}}-<a href="{% url 'myall:mbloglist' r.pk %}">{{ r }}</a></li>
+    {% endfor %}
+    </ul>
+    </body>
+</html>

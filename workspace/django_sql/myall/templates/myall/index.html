@@ -1,0 +1,17 @@
+<html>
+
+<body>
+  myall
+  </hr>
+  <ul>
+  {% for record in records %}
+    {% for blogTagRecord in record.blogTaglist %}
+        <li>tag.name:{{ blogTagRecord.tag.name }} || blog.title:{{ blogTagRecord.blog.title }}</li>
+    {% endfor %}
+  {% endfor %}
+  </ul>
+  </hr>
+  <a href="{% url 'myall:many2many' %}">many2many</a>
+  <a href="{% url 'myall:adjustlist' %}">adjustlist</a>
+</body>
+</html>

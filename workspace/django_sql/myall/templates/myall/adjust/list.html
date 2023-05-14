@@ -1,0 +1,16 @@
+<html>
+  <body>
+    List
+    <ul>
+    {% for adjust in genericAdjustmentList %}
+        <li>
+          <a href="{% url 'myall:adjust_detail' adjust.pk %}">pk:{{adjust.pk}}</a> object_id:{{adjust.object_id}} tag:{{adjust.tag}}
+          
+        </li>
+    {% endfor %}
+    </ul>
+  </br>  
+  <a href="{% url 'myall:adjustlist_paypay' %}">paypay insert</a>
+  <a href="{% url 'myall:adjustlist_line' %}">line insert</a>
+  </body>
+</html>
