@@ -2,6 +2,7 @@ image: docker:20.10
 services:
   - docker:dind
 
+# 全てのジョブの前に実行するコスクリプト
 before_script:
   - docker login gitlab.example.com:4567
 
@@ -29,8 +30,10 @@ build:
     #untracked: true
     paths:
       - $DOCKER_IMAGE.tar
-  #only:
-  #  - master
+  only:
+    - master
+    - dev
+    - stg
 
 test:
   stage: test
@@ -44,4 +47,8 @@ test:
   artifacts:
     paths:
       - $DOCKER_IMAGE.tar
+  only:
+    - master
+    - dev
+    - stg
 
