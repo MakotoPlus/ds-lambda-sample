@@ -43,7 +43,7 @@ test:
     - apk add --update py-pip
   script:
     - docker load -i ${DOCKER_IMAGE}.tar
-    - docker-compose run django_server pytest
+    - docker-compose run django_sql pytest
   artifacts:
     paths:
       - $DOCKER_IMAGE.tar
