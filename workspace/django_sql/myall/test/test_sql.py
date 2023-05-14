@@ -83,7 +83,7 @@ class TestSql():
       ('アニメ', ['チェンソーマン', '初代機動戦士ガンダム', '機動戦士ZZガンダム']), 
     ]
   )
-  def test_002(self, sqlclear, create_blogtag, tagname, expected):
+  def test_002(self, create_blogtag, tagname, expected):
     records = sqllogic.check_01_select_related(tagname)
     for record in records:
         print("++++++++++++++++")
