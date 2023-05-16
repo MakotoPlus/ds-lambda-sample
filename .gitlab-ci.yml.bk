@@ -24,7 +24,7 @@ build:
     - pip install awscli
   script:
     # イメージのビルド
-    - docker-compose -f gitlab/docker-compose.yml build
+    - docker-compose build
     - docker save $DOCKER_IMAGE > $DOCKER_IMAGE.tar
   artifacts:
     #untracked: true
