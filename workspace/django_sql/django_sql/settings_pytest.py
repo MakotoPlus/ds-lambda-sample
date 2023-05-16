@@ -193,18 +193,6 @@ LOGGING = {
     },
     # ハンドラの設定
     'handlers': {
-        'file': {
-            'level': LOGER_LEVEL,
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOG_DIR, 'django.app.log'),
-            'formatter': 'production',
-        },
-        'file_django': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOG_DIR, 'django.app.debug.log'),
-            'formatter': 'production',
-        },
         'console':{
             'level':'DEBUG',
             'class':'logging.StreamHandler',
@@ -222,13 +210,13 @@ LOGGING = {
     'loggers': {
         # 実行SQL
         'django.db': {
-            'handlers': ['file', 'console'],
+            'handlers': ['console'],
             'level': DB_LOG_LEVEL,
             'propagate': False,
         },
         # factoryが出力するログ全般を拾うロガー
         'factory': {
-            'handlers': ['file_django','console'],
+            'handlers': ['console'],
             'level': DJANGO_LOG_LEVEL,
             'propagate': True,
         },
