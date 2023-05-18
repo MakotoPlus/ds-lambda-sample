@@ -1,15 +1,22 @@
 version: '3'
 
 services:
-  django_sql:
+        #proxy:
+        #   build: .proxy
+        #   networks:
+        #     - aws_django_sql_network
+
+  django_sql_service:
     # os起動時(Docker起動時)にコンテナを再起動さる場合
     # restart: always
     # ComposeFileを実行しビルドされるときのルートパス
     # このフォルダにDockerファイルを置く
     build:
-      context: ./..
+      context: .
       dockerfile: ./docker_srv/Dockerfile
     image: django_sql_img
+    networks:
+      - aws_django_sql_network
     # Hostname
     hostname: django_sql_host
 
@@ -20,13 +27,13 @@ services:
     tty: true
     # ローカルフォルダとコンテナ内のマウントディレクトリの関連づけ
     volumes:
-      - ./..:/project
+      - .:/project
     # 内部通信をするので不要
-    #ports:
-    #  - 8000:8000
+    ports:
+      - 8000:8000
     # PORT開放
-    #expose:
-    #  - 8000
+    expose:
+      - 8000
     #command: [python, manage.py, runserver, 0.0.0.0:8000]
     # コンテナ内のワーキングディレクトリ
     working_dir: '/project/workspace/django_sql'
@@ -34,21 +41,26 @@ services:
     #command: [uwsgi, --http, 0.0.0.0:8000, --buffer-size, "327670", --wsgi-file, django_sql/wsgi.py]
     command: [uwsgi, --socket, 0.0.0.0:8000, --buffer-size, "327670", --wsgi-file, django_sql/wsgi.py]
 
-  nginx_web:
+  nginx_web_service:
     build:
-      context: ./..
+      context: .
       dockerfile: ./docker_nginx/Dockerfile
+    networks:
+      - aws_django_sql_network
     # Hostname
     hostname: nginx_web_host
     # コンテナ名
     container_name: nginx_con01
     volumes:
-      - ./../workspace/django_sql/static:/static
+      - ./workspace/django_sql/static:/static
     ports:
       - 8001:8001
     depends_on:
-      - django_sql
+      - django_sql_service
     # PORT開放
     expose:
       - 8001
+
+networks:
+  aws_django_sql_network:
 

@@ -9,6 +9,9 @@ services:
     build:
         context: .
         dockerfile: ./docker_srv/Dockerfile
+    netoworks:
+      - django_sql_network_local
+
     image: django_sql_img
     # Hostname
     hostname: django_sql_host
