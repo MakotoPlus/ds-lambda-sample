@@ -75,7 +75,6 @@ deploy:
   script:
     - docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
-    - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
     - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSITORY_DJANGO
     # イメージのプッシュ
@@ -98,6 +97,7 @@ deploy:
     
     # NGINX TASK 定義更新
     - docker load -i ${DOCKER_NGINX_IMG}.tar
+    - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     - >
       aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
       jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > nginx.task.out.json
