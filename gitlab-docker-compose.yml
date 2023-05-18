@@ -40,6 +40,7 @@ services:
     build:
       context: .
       dockerfile: ./docker_nginx/Dockerfile
+    image: nginx_img
     networks:
       - aws_django_sql_network
     # Hostname

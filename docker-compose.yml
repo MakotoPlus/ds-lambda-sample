@@ -9,10 +9,9 @@ services:
     build:
         context: .
         dockerfile: ./docker_srv/Dockerfile
-    netoworks:
-      - django_sql_network_local
-
     image: django_sql_img
+    networks:
+      - django_sql_network_local
     # Hostname
     hostname: django_sql_host
 
@@ -34,4 +33,7 @@ services:
     working_dir: '/project/workspace/django_sql'
     # 実行    
     command: [python, manage.py, runserver, 0.0.0.0:8000]
+
+networks:
+  django_sql_network_local:
 

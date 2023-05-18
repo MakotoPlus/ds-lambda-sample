@@ -10,11 +10,15 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_IMAGE: django_sql_img
+  DOCKER_IMAGE: docker_compose_img
   CI_AWS_ECS_CLUSTER: django_sql_claster
   CI_AWS_ECS_SERVICE: django_sql_service
-  CI_AWS_ECS_TASK_DEFINITION: django_sql_task
   CI_AWS_REGON: ap-northeast-1
+  
+  DOCKER_DJANGO_IMG: django_sql_img
+  DOCKER_NGINX_IMG: nginx_img
+  CI_AWS_ECS_TASK_DEFINITION_DJANGO: django_sql_task
+  CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_img_task
 
 stages:
   - build
@@ -68,25 +72,42 @@ deploy:
     - apk add jq
   script:
     - docker load -i ${DOCKER_IMAGE}.tar
-    - docker tag $DOCKER_IMAGE:latest $ECR_REPOSITORY:${CI_COMMIT_SHORT_SHA}
+    - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
-    - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSITORY
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSITORY_DJANGO
     # イメージのプッシュ
-    - docker push $ECR_REPOSITORY:${CI_COMMIT_SHORT_SHA}
-    # TASK 定義更新
+    - docker push $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
+    # DJANGO TASK 定義更新
     - >
-      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION} --region ${CI_AWS_REGON} |
-      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > task.out.json
+      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${CI_AWS_REGON} |
+      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > django.task.out.json
 
     - >
-      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY}.*,|\"image\": \"${ECR_REPOSITORY}:${CI_COMMIT_SHORT_SHA}\",|g"
-      task.out.json
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
+      django.task.out.json
 
-    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION} --cli-input-json file://task.out.json
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://django.task.out.json
     # サービス更新
     - >
       aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_SERVICE}
-      --task-definition ${CI_AWS_ECS_TASK_DEFINITION}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
+    
+    # NGINX TASK 定義更新
+    - >
+      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
+      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > nginx.task.out.json
+
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
+      nginx.task.out.json
+
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://nginx.task.out.json
+    # サービス更新
+    - >
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_SERVICE}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
 
   only:
     - master
