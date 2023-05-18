@@ -1,11 +1,6 @@
 version: '3'
 
 services:
-        #proxy:
-        #   build: .proxy
-        #   networks:
-        #     - aws_django_sql_network
-
   django_sql_service:
     # os起動時(Docker起動時)にコンテナを再起動さる場合
     # restart: always
@@ -54,12 +49,12 @@ services:
     volumes:
       - ./workspace/django_sql/static:/static
     ports:
-      - 8001:8001
+      - 80:80
     depends_on:
       - django_sql_service
     # PORT開放
     expose:
-      - 8001
+      - 80
 
 networks:
   aws_django_sql_network:
