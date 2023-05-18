@@ -10,12 +10,11 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_IMAGE: docker_compose_img
+  DOCKER_DJANGO_IMG: django_sql_img
   CI_AWS_ECS_CLUSTER: django_sql_claster
   CI_AWS_ECS_SERVICE: django_sql_service
   CI_AWS_REGON: ap-northeast-1
   
-  DOCKER_DJANGO_IMG: django_sql_img
   DOCKER_NGINX_IMG: nginx_img
   CI_AWS_ECS_TASK_DEFINITION_DJANGO: django_sql_task
   CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_img_task
@@ -34,11 +33,13 @@ build:
   script:
     # イメージのビルド
     - docker-compose -f gitlab-docker-compose.yml build
-    - docker save $DOCKER_IMAGE > $DOCKER_IMAGE.tar
+    - docker save $DOCKER_DJANGO_IMG > $DOCKER_DJANGO_IMG.tar
+    - docker save $DOCKER_NGINX_IMG > $DOCKER_NGINX_IMG.tar
   artifacts:
     #untracked: true
     paths:
-      - $DOCKER_IMAGE.tar
+      - $DOCKER_DJANGO_IMG.tar
+      - $DOCKER_NGINX_IMG.tar
   only:
     - master
     - dev
@@ -51,11 +52,12 @@ test:
   before_script:
     - apk add --update py-pip
   script:
-    - docker load -i ${DOCKER_IMAGE}.tar
+    - docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker-compose -f gitlab-docker-compose.yml run django_sql_service pytest
   artifacts:
     paths:
-      - $DOCKER_IMAGE.tar
+      - $DOCKER_DJANGO_IMG.tar
+      - $DOCKER_NGINX_IMG.tar
   only:
     - master
     - dev
@@ -71,7 +73,7 @@ deploy:
     - pip install awscli
     - apk add jq
   script:
-    - docker load -i ${DOCKER_IMAGE}.tar
+    - docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
     - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
@@ -95,6 +97,7 @@ deploy:
       --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
     
     # NGINX TASK 定義更新
+    - docker load -i ${DOCKER_NGINX_IMG}.tar
     - >
       aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
       jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > nginx.task.out.json
