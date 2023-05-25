@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  nginx_web_service:
+    build:
+      context: .
+      dockerfile: ./docker_nginx/Dockerfile
+    image: nginx_img
+    networks:
+      - aws_django_sql_network
+    # Hostname
+    hostname: nginx_web_host
+    # コンテナ名
+    container_name: nginx_con01
+    volumes:
+      - ./workspace/django_sql/static:/static
+    ports:
+      - 80:80
+    #depends_on:
+    #  - django_sql_service
+    # PORT開放
+    expose:
+      - 80
+
+networks:
+  aws_django_sql_network:
+

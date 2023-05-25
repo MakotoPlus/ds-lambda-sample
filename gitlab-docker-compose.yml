@@ -21,8 +21,8 @@ services:
     # コンテナを終了させたくない場合に設定
     tty: true
     # ローカルフォルダとコンテナ内のマウントディレクトリの関連づけ
-    volumes:
-      - .:/project
+    #volumes:
+    #  - .:/project
     # 内部通信をするので不要
     ports:
       - 8000:8000
@@ -34,7 +34,7 @@ services:
     working_dir: '/project/workspace/django_sql'
     # Django起動 直接の場合はhttp, nginx経由の場合はsocketを使用する
     #command: [uwsgi, --http, 0.0.0.0:8000, --buffer-size, "327670", --wsgi-file, django_sql/wsgi.py]
-    command: [uwsgi, --socket, 0.0.0.0:8000, --buffer-size, "327670", --wsgi-file, django_sql/wsgi.py]
+    #command: [uwsgi, --socket, 0.0.0.0:8000, --buffer-size, "327670", --wsgi-file, django_sql/wsgi.py]
 
   nginx_web_service:
     build:
