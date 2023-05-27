@@ -14,7 +14,7 @@ variables:
   CI_AWS_ECS_CLUSTER: DJANGO-SQL-CLASTER
   CI_AWS_ECS_DJANGO_SERVICE: double-django
   #CI_AWS_ECS_NGINX_SERVICE: nginx_service
-  CI_AWS_REGON: ap-northeast-1
+
   
   DOCKER_NGINX_IMG: nginx_img
   CI_AWS_ECS_TASK_DEFINITION_DJANGO: double-django
@@ -76,7 +76,7 @@ deploy:
     - apk add jq
   script:
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
-    - aws ecr get-login-password | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
+    - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
     # DJANGOイメージのプッシュ
     - docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
@@ -87,7 +87,7 @@ deploy:
     - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # DJANGO TASK 定義更新
     - >
-      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${CI_AWS_REGON} |
+      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
       jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE}
     # DJANGO 加工
     - >
@@ -96,7 +96,7 @@ deploy:
 
     # NGINX TASK 定義更新
     # - >
-    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
+    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
     #   jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE}
     - >
       sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_NGINX}.*,|\"image\": \"${ECR_REPOSITORY_NGINX}:${CI_COMMIT_SHORT_SHA}\",|g"
@@ -104,7 +104,7 @@ deploy:
 
     # NGINX TASK 定義更新
     # - >
-    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
+    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
     #   jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE}
     #- aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE}
     # NGINXサービス更新
