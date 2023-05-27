@@ -217,7 +217,8 @@ LOGGING = {
     'root' : {
         # 自分で追加したアプリケーション全般のログを拾うロガー
         # level DEBUG, INFO, WARNING, ERROR, CRITICAL
-        'handlers': ['file'],
+        #'handlers': ['file'],
+        'handlers': ['console'],
         'level': LOGER_LEVEL,
         'propagate': True,
     },
@@ -225,13 +226,15 @@ LOGGING = {
     'loggers': {
         # 実行SQL
         'django.db': {
-            'handlers': ['file', 'console'],
+            #'handlers': ['file', 'console'],
+            'handlers': ['console'],
             'level': DB_LOG_LEVEL,
             'propagate': False,
         },
         # factoryが出力するログ全般を拾うロガー
         'factory': {
-            'handlers': ['file_django','console'],
+            #'handlers': ['file_django','console'],
+            'handlers': ['console'],
             'level': DJANGO_LOG_LEVEL,
             'propagate': True,
         },

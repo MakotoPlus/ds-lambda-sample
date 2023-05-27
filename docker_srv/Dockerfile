@@ -30,6 +30,7 @@ COPY $SSH /root/.ssh
 RUN chmod 0600 /root/.ssh/*
 
 COPY $HOST_COPY_DIR $DOCKER_COPY_DIR
+
 WORKDIR $WORK_DIR
 # Nginxと通信用ディレクトリいる？
 #RUN mkdir -p tmp/sockets
