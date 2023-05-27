@@ -35,8 +35,8 @@ WORKDIR $WORK_DIR
 # Nginxと通信用ディレクトリいる？
 #RUN mkdir -p tmp/sockets
 
-RUN python manage.py migrate
 RUN mkdir -p $WORK_DIR/log
+RUN python manage.py migrate
 # Nginxと通信用ディレクトリいる？
 #RUN python manage.py collectstatic
 EXPOSE 8000
