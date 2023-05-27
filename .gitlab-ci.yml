@@ -42,10 +42,10 @@ build:
     paths:
       - $DOCKER_DJANGO_IMG.tar
       - $DOCKER_NGINX_IMG.tar
-  only:
-    - master
-    - dev
-    - stg
+  #only:
+  #  - master
+  #  - dev
+  #  - stg
 
 test:
   stage: test
@@ -60,10 +60,10 @@ test:
     paths:
       - $DOCKER_DJANGO_IMG.tar
       - $DOCKER_NGINX_IMG.tar
-  only:
-    - master
-    - dev
-    - stg
+  #only:
+  #  - master
+  #  - dev
+  #  - stg
 
 # タスク定義更新
 deploy:
