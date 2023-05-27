@@ -76,7 +76,7 @@ deploy:
     - apk add jq
   script:
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
-    - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
     # DJANGOイメージのプッシュ
     - docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
