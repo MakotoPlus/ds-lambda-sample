@@ -29,7 +29,6 @@ DEBUG = True
 
 #ALLOWED_HOSTS = ['localhost','127.0.0.1', '13.230.43.178', '*']
 ALLOWED_HOSTS = ['*']
-#ALLOWED_HOSTS = ['django_img-8000-tcp']
 #ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 # Application definition

@@ -23,7 +23,7 @@ COPY $DOCKER_DIR/app_nginx.conf /etc/nginx/conf.d/app_nginx.conf
 COPY $DOCKER_DIR/uwsgi_params /etc/nginx/.
 
 # ローカルのhtmlファイル をコンテナ内の /var/www/html/ にコピーする
-#COPY ./*.html /var/www/html/
+COPY ./*.html /var/www/html/
 # ローカルのStaticをコピー
 COPY ./workspace/django_sql/static /static
 
