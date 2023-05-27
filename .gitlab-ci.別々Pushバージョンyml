@@ -1,0 +1,125 @@
+#
+#
+# 別々のコンテナへPushするバージョン
+#
+#
+image: docker:20.10
+services:
+  - docker:dind
+
+# 全てのジョブの前に実行するコスクリプト
+before_script:
+  - docker login gitlab.example.com:4567
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DJANGO_IMG: django_sql_img
+  CI_AWS_ECS_CLUSTER: django_sql_claster
+  CI_AWS_ECS_DJANGO_SERVICE: django_sql_service
+  CI_AWS_ECS_NGINX_SERVICE: nginx_service
+  CI_AWS_REGON: ap-northeast-1
+  
+  DOCKER_NGINX_IMG: nginx_img
+  CI_AWS_ECS_TASK_DEFINITION_DJANGO: django_sql_task
+  CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_img_task
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  before_script:
+    # AWS CLIをインストール
+    - apk add --update py-pip
+    - pip install awscli
+  script:
+    # イメージのビルド
+    - docker-compose -f gitlab-docker-compose.yml build
+    - docker save $DOCKER_DJANGO_IMG > $DOCKER_DJANGO_IMG.tar
+    - docker save $DOCKER_NGINX_IMG > $DOCKER_NGINX_IMG.tar
+  artifacts:
+    #untracked: true
+    paths:
+      - $DOCKER_DJANGO_IMG.tar
+      - $DOCKER_NGINX_IMG.tar
+  only:
+    - master
+    - dev
+    - stg
+
+test:
+  stage: test
+  dependencies:
+    - build
+  before_script:
+    - apk add --update py-pip
+  script:
+    - docker load -i ${DOCKER_DJANGO_IMG}.tar
+    - docker-compose -f gitlab-docker-compose.yml run django_sql_service pytest
+  artifacts:
+    paths:
+      - $DOCKER_DJANGO_IMG.tar
+      - $DOCKER_NGINX_IMG.tar
+  only:
+    - master
+    - dev
+    - stg
+
+# タスク定義更新
+deploy:
+  stage: deploy
+  dependencies:
+    - test
+  before_script:
+    - apk add --update py-pip
+    - pip install awscli
+    - apk add jq
+  script:
+    - docker load -i ${DOCKER_DJANGO_IMG}.tar
+    - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSITORY_DJANGO
+    # イメージのプッシュ
+    - docker push $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    # DJANGO TASK 定義更新
+    - >
+      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${CI_AWS_REGON} |
+      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > django.task.out.json
+
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
+      django.task.out.json
+
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://django.task.out.json
+    # サービス更新
+    - >
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
+    
+    # NGINX TASK 定義更新
+    - docker load -i ${DOCKER_NGINX_IMG}.tar
+    - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
+    # イメージのプッシュ
+    - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
+    - >
+      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
+      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > nginx.task.out.json
+
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
+      nginx.task.out.json
+
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://nginx.task.out.json
+    # サービス更新
+    - >
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
+
+  only:
+    - master
+  when: manual
+ 

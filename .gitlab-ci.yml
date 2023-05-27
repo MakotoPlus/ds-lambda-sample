@@ -11,14 +11,16 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DJANGO_IMG: django_sql_img
-  CI_AWS_ECS_CLUSTER: django_sql_claster
-  CI_AWS_ECS_DJANGO_SERVICE: django_sql_service
-  CI_AWS_ECS_NGINX_SERVICE: nginx_service
+  CI_AWS_ECS_CLUSTER: DJANGO-SQL-CLASTER
+  CI_AWS_ECS_DJANGO_SERVICE: double-django
+  #CI_AWS_ECS_NGINX_SERVICE: nginx_service
   CI_AWS_REGON: ap-northeast-1
   
   DOCKER_NGINX_IMG: nginx_img
-  CI_AWS_ECS_TASK_DEFINITION_DJANGO: django_sql_task
-  CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_img_task
+  CI_AWS_ECS_TASK_DEFINITION_DJANGO: double-django
+  #CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_img_task
+
+ JSON_FILE: task.out.json
 
 stages:
   - build
@@ -74,47 +76,50 @@ deploy:
     - pip install awscli
     - apk add jq
   script:
-    - docker load -i ${DOCKER_DJANGO_IMG}.tar
-    - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
     - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSITORY_DJANGO
-    # イメージのプッシュ
+    # DJANGOイメージのプッシュ
+    - docker load -i ${DOCKER_DJANGO_IMG}.tar
+    - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
     - docker push $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    # NGINX イメージのプッシュ
+    - docker load -i ${DOCKER_NGINX_IMG}.tar
+    - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
+    - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # DJANGO TASK 定義更新
     - >
       aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${CI_AWS_REGON} |
-      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > django.task.out.json
-
+      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE}
+    # DJANGO 加工
     - >
       sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
-      django.task.out.json
+      ${JSON_FILE}
 
-    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://django.task.out.json
-    # サービス更新
+    # NGINX TASK 定義更新
+    # - >
+    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
+    #   jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE}
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_NGINX}.*,|\"image\": \"${ECR_REPOSITORY_NGINX}:${CI_COMMIT_SHORT_SHA}\",|g"
+      ${JSON_FILE}
+
+    # NGINX TASK 定義更新
+    # - >
+    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
+    #   jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE}
+    #- aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE}
+    # NGINXサービス更新
+    # - >
+    #   aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
+    #   --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
+
+    # 定義更新PUSH
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://${JSON_FILE}
+    # DJANGOサービス更新
     - >
       aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
       --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
-    
-    # NGINX TASK 定義更新
-    - docker load -i ${DOCKER_NGINX_IMG}.tar
-    - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
-    # イメージのプッシュ
-    - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
-    - >
-      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${CI_AWS_REGON} |
-      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > nginx.task.out.json
-
-    - >
-      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
-      nginx.task.out.json
-
-    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://nginx.task.out.json
-    # サービス更新
-    - >
-      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
-      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
-
-  only:
-    - master
+  #only:
+  #  - master
   when: manual
  
