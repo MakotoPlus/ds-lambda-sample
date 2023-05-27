@@ -14,18 +14,18 @@ ENV TZ JST-9
 ENV TERM xterm
 
 # default.confファイル削除
-#RUN rm /etc/nginx/conf.d/default.conf
-#RUN touch /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/conf.d/default.conf
+RUN touch /etc/nginx/conf.d/default.conf
 
 # ローカルの default.conf をコンテナ内の /etc/nginx/conf.d/ にコピーする
-#COPY $DOCKER_DIR/app_nginx.conf /etc/nginx/conf.d/app_nginx.conf
+COPY $DOCKER_DIR/app_nginx.conf /etc/nginx/conf.d/app_nginx.conf
 # ローカルの uwsgi_params をコンテナ内の /etc/nginx/conf.d/ にコピーする
-#COPY $DOCKER_DIR/uwsgi_params /etc/nginx/.
+COPY $DOCKER_DIR/uwsgi_params /etc/nginx/.
 
 # ローカルのhtmlファイル をコンテナ内の /var/www/html/ にコピーする
 #COPY ./*.html /var/www/html/
 # ローカルのStaticをコピー
-#COPY ./workspace/django_sql/static /static
+COPY ./workspace/django_sql/static /static
 
 RUN apt-get install -y vim less
 
