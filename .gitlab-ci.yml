@@ -119,7 +119,7 @@ deploy:
     - >
       aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
       --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
-  #only:
-  #  - master
+    #only:
+    #  - master
   when: manual
  
