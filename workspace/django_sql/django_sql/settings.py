@@ -25,10 +25,12 @@ SECRET_KEY = 'x4%ifc8f15^@(4ff7wg^dx823j6s%n$msym4_g8u%1$%_dtu!('
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1', '13.230.43.178', '*']
+#ALLOWED_HOSTS = ['localhost','127.0.0.1', '13.230.43.178', '*']
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['django_img-8000-tcp']
 #ALLOWED_HOSTS = ['localhost','127.0.0.1']
-
 
 # Application definition
 
