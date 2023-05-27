@@ -19,8 +19,7 @@ variables:
   DOCKER_NGINX_IMG: nginx_img
   CI_AWS_ECS_TASK_DEFINITION_DJANGO: double-django
   #CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_img_task
-
- JSON_FILE: task.out.json
+  JSON_FILE: task.out.json
 
 stages:
   - build
