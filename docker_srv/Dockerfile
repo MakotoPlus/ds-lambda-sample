@@ -40,6 +40,6 @@ EXPOSE 8000
 
 # Django起動 直接の場合はhttp, nginx経由の場合はsocketを使用する
 # CMD ["uwsgi", "--http", "0.0.0.0:8000", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
-CMD ["uwsgi", "--socket", "0.0.0.0:8000", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
+CMD ["uwsgi", "--socket", "0.0.0.0:8000", "--chdir", "/project/workspace/django_sql", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
 #CMD ["sh", "-c", "uwsgi --socket :8000 --buffer-size 327670 --wsgi-file django_sql/wsgi.py"]
 
