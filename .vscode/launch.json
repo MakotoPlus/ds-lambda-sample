@@ -5,6 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python Django",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/manage.py",
+      "args": [
+        "runserver"
+      ],
+      "django": true,
+      "justMyCode": true
+    },
+    {
       "name": "Python Django 2",
       "type": "python",
       "request": "launch",
@@ -16,18 +27,5 @@
       "django": true,
       "justMyCode": true
     },
-    {
-      "name": "Python Django",
-      "type": "python",
-      "request": "launch",
-      "program": "manage.py",
-      "args": [
-        "runserver",
-        "0.0.0.0:8001"
-      ],
-      "cwd": "${workspaceFolder}/workspace/django_sql",
-      "django": true,
-      "justMyCode": true
-    }
   ]
 }

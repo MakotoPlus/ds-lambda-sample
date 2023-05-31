@@ -1,6 +1,6 @@
 {
   "python.testing.pytestArgs": [
-    "workspace"
+    "workspace/django_sql"
   ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true
