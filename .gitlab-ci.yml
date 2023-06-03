@@ -118,7 +118,7 @@ deploy:
     - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE_NGINX}
     # NGINXサービス更新
     - >
-      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX}
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
       --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
 
 
