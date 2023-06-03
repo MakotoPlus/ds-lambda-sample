@@ -3,8 +3,8 @@ services:
   - docker:dind
 
 # 全てのジョブの前に実行するコスクリプト
-before_script:
-  - docker login gitlab.example.com:4567
+#before_script:
+#  - docker login gitlab.example.com:4567
 
 variables:
   DOCKER_HOST: tcp://docker:2375
