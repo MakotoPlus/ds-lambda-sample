@@ -37,7 +37,7 @@ build:
     - pip install awscli
   script:
     # イメージのビルド
-    - docker-compose -f gitlab-docker-compose.yml build
+    - docker-compose -f conservice.yml build
     - docker save $DOCKER_DJANGO_IMG > $DOCKER_DJANGO_IMG.tar
     - docker save $DOCKER_NGINX_IMG > $DOCKER_NGINX_IMG.tar
   artifacts:
@@ -56,7 +56,7 @@ test:
     - apk add --update py-pip
   script:
     #- docker load -i ${DOCKER_DJANGO_IMG}.tar
-    - docker-compose -f gitlab-docker-compose.yml run django_sql_service pytest
+    - docker-compose -f conservice.yml run django_sql_service pytest
   #only:
   #  - master
   #  - dev
