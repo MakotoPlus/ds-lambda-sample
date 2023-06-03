@@ -23,12 +23,14 @@ variables:
   JSON_FILE_NGINX: task.nginx.out.json
 
 stages:
-  - build
   - test
+  - build
   - deploy
 
 build:
   stage: build
+  dependencies:
+    - test
   before_script:
     # AWS CLIをインストール
     - apk add --update py-pip
@@ -50,17 +52,11 @@ build:
 
 test:
   stage: test
-  dependencies:
-    - build
   before_script:
     - apk add --update py-pip
   script:
-    - docker load -i ${DOCKER_DJANGO_IMG}.tar
+    #- docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker-compose -f gitlab-docker-compose.yml run django_sql_service pytest
-  artifacts:
-    paths:
-      - $DOCKER_DJANGO_IMG.tar
-      - $DOCKER_NGINX_IMG.tar
   #only:
   #  - master
   #  - dev
@@ -70,7 +66,7 @@ test:
 deploy:
   stage: deploy
   dependencies:
-    - test
+    - build
   before_script:
     - apk add --update py-pip
     - pip install awscli
