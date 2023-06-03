@@ -23,15 +23,14 @@ variables:
   JSON_FILE_NGINX: task.nginx.out.json
 
 stages:
-  - build
   - test
-  #- build
+  - build
   - deploy
 
 build:
   stage: build
-  #dependencies:
-  #  - test
+  dependencies:
+    - test
   before_script:
     # AWS CLIをインストール
     - apk add --update py-pip
@@ -53,18 +52,18 @@ build:
 
 test:
   stage: test
-  dependencies:
-    - build
+  #dependencies:
+  #  - build
   before_script:
     - apk add --update py-pip
   script:
-    - docker load -i ${DOCKER_DJANGO_IMG}.tar
+    #- docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker-compose -f conservice.yml run django_sql_service pytest
-  artifacts:
+  #artifacts:
     #untracked: true
-    paths:
-      - $DOCKER_DJANGO_IMG.tar
-      - $DOCKER_NGINX_IMG.tar
+  #  paths:
+  #    - $DOCKER_DJANGO_IMG.tar
+  #    - $DOCKER_NGINX_IMG.tar
   #only:
   #  - master
   #  - dev
@@ -74,7 +73,8 @@ test:
 deploy:
   stage: deploy
   dependencies:
-    - test
+    #- test
+    - build
   before_script:
     - apk add --update py-pip
     - pip install awscli
@@ -92,9 +92,9 @@ deploy:
     - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # DJANGO TASK 定義更新
-    #- >
-    # aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
-    # jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_DJANGO}
+    - >
+     aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
+     jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_DJANGO}
     # DJANGO 加工
     - >
       sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
@@ -108,28 +108,20 @@ deploy:
 
     # NGINX TASK 定義更新
     - >
-      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
-      jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_NGINX}
+     aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
+     jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_NGINX}
+    # NGINX 加工
     - >
       sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_NGINX}.*,|\"image\": \"${ECR_REPOSITORY_NGINX}:${CI_COMMIT_SHORT_SHA}\",|g"
       ${JSON_FILE_NGINX}
-
-    # NGINX TASK 定義更新
-    # - >
-    #   aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
-    #   jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_NGINX}
-    #- aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE_NGINX}
-    # NGINXサービス更新
-    - >
-      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
-      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
-
     # 定義更新PUSH
     - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE_NGINX}
     # NGINXサービス更新
     - >
-      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX}
       --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
+
+
   only:
     - master
   #when: manual
