@@ -70,11 +70,10 @@ test:
   #  - stg
 
 
-# タスク定義更新
-deploy:
+# NGINXタスク定義更新
+deploy_nginx:
   stage: deploy
   dependencies:
-    #- test
     - build
   before_script:
     - apk add --update py-pip
@@ -82,31 +81,11 @@ deploy:
     - apk add jq
   script:
     # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
-    # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
-    # DJANGOイメージのプッシュ
-    - docker load -i ${DOCKER_DJANGO_IMG}.tar
-    - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
-    - docker push $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
     # NGINX イメージのプッシュ
     - docker load -i ${DOCKER_NGINX_IMG}.tar
     - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
-    # DJANGO TASK 定義更新
-    - >
-     aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
-     jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_DJANGO}
-    # DJANGO 加工
-    - >
-      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
-      ${JSON_FILE_DJANGO}
-    # 定義更新PUSH
-    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://${JSON_FILE_DJANGO}
-    # DJANGOサービス更新
-    - >
-      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
-      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
-
     # NGINX TASK 定義更新
     - >
      aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
@@ -121,8 +100,41 @@ deploy:
     - >
       aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
       --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
+  only:
+    - master
+  #when: manual
 
 
+# DJANGOタスク定義更新
+deploy_django:
+  stage: deploy
+  dependencies:
+    - build
+  before_script:
+    - apk add --update py-pip
+    - pip install awscli
+    - apk add jq
+  script:
+    # IAM認証情報を使用してECRリポジトリのログインパスワードを取得
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
+    # DJANGOイメージのプッシュ
+    - docker load -i ${DOCKER_DJANGO_IMG}.tar
+    - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    - docker push $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
+    # DJANGO TASK 定義更新
+    - >
+     aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
+     jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_DJANGO}
+    # DJANGO 加工
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
+      ${JSON_FILE_DJANGO}
+    # 定義更新PUSH
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://${JSON_FILE_DJANGO}
+    # DJANGOサービス更新
+    - >
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
   only:
     - master
   #when: manual
