@@ -69,6 +69,7 @@ test:
   #  - dev
   #  - stg
 
+
 # タスク定義更新
 deploy:
   stage: deploy
