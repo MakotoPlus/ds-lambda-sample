@@ -133,7 +133,7 @@ class MessageView(TemplateView):
         print("BOTO3 send_message")
         response = sqs_client.send_message(
             QueueUrl=send_sqs,
-            MessageBody='{SendMessage:"ABC"}',
+            MessageBody='{SendMessage:"' +  str(context["message"]) + '"}',
             MessageGroupId='sqs_event'
             #MessageDeduplicationId=str(uuid.uuid4()),
             )
