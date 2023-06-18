@@ -108,7 +108,7 @@ class MessageView(TemplateView):
     def get_context_data(self, **kwargs):
         #print(kwargs)
         context = super().get_context_data(**kwargs)
-        context['sqs'] = 'https://sqs.ap-northeast-1.amazonaws.com/847754671288/sqs_event'
+        context['sqs'] = 'sqs_event'
         context['message'] = 'Get処理'
         return context
 
@@ -128,7 +128,7 @@ class MessageView(TemplateView):
         print("BOTO3 get_queue_url")
         send_sqs = sqs_client.get_queue_url(QueueName=request.POST.get('sqs'))['QueueUrl']
         print(f'SQS=[{send_sqs}]')
-        dt_now = datetime.datetime.now()
+        dt_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         print("BOTO3 send_message")
         response = sqs_client.send_message(
             QueueUrl=send_sqs,
