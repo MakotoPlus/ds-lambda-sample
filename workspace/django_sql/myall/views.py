@@ -134,8 +134,8 @@ class MessageView(TemplateView):
         response = sqs_client.send_message(
             QueueUrl=send_sqs,
             MessageBody='{SendMessage:"ABC"}',
-            MessageGroupId='sqs_event',
-            MessageDeduplicationId=str(uuid.uuid4()),
+            MessageGroupId='sqs_event'
+            #MessageDeduplicationId=str(uuid.uuid4()),
             )
         responsed_feiled = response.get('Failed')
         if responsed_feiled:
