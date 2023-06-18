@@ -1,0 +1,34 @@
+[
+  {
+    "model": "myall.MBlog_tags",
+    "pk": 1,
+    "fields": {
+      "mblog_id" : 1
+      ,"mtag_id": 1
+    }
+  }
+  ,{
+    "model": "myall.MBlog_tags",
+    "pk": 2,
+    "fields": {
+      "mblog_id" : 1
+      ,"mtag_id": 2
+    }
+  }
+  ,{
+    "model": "myall.MBlog_tags",
+    "pk": 3,
+    "fields": {
+      "mblog_id" : 1
+      ,"mtag_id": 3
+    }
+ }
+ ,{
+  "model": "myall.MBlog_tags",
+  "pk": 4,
+  "fields": {
+    "mblog_id" : 2
+    ,"mtag_id": 1
+  }
+}
+]

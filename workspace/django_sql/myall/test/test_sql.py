@@ -36,6 +36,8 @@ class TestSql():
                     -- 機動戦士ZZガンダム
       Succer        -- J1
     """
+    
+    
     blog = self.create_blog('チェンソーマン', 11)
     tagChenson = test_factory.TagFactory.create(name='チェンソーマン')
     tagAnime = test_factory.TagFactory.create(name='アニメ')    

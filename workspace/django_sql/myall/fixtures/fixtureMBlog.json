@@ -1,0 +1,29 @@
+[
+  {
+    "model": "myall.MBlog",
+    "pk": 1,
+    "fields": {
+      "title": "title001"
+      ,"content": "1-content"
+      ,"good_point": 123
+    }
+  }
+  ,{
+    "model": "myall.MBlog",
+    "pk": 2,
+    "fields": {
+      "title": "title-2"
+      ,"content": "2-content"
+      ,"good_point": 23
+    }
+  }
+  ,{
+    "model": "myall.MBlog",
+    "pk": 3,
+    "fields": {
+      "title": "title-3"
+      ,"content": "3-content"
+      ,"good_point": 23
+    }
+  }
+]

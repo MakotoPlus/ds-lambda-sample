@@ -1,4 +1,6 @@
 import logging
+import datetime
+import boto3
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
@@ -93,3 +95,52 @@ class AdjustDetailView(TemplateView):
             context['line'] = adjust.content_object
             self.template_name = 'myall/adjust/line/detail.html'
         return context
+    
+class MessageView(TemplateView):
+    '''
+    MessageView
+    '''
+    template_name = "myall/message/index.html"
+
+    success_url = reverse_lazy("myall:adjustlist")
+
+    #変数
+    def get_context_data(self, **kwargs):
+        #print(kwargs)
+        context = super().get_context_data(**kwargs)
+        context['sqs'] = 'https://sqs.ap-northeast-1.amazonaws.com/847754671288/sqs_event'
+        context['message'] = 'Get処理'
+        return context
+
+    #get処理
+    def get(self, request, *args, **kwargs):
+        print(kwargs)
+        return super().get(request, *args, **kwargs)
+
+    #post処理
+    def post(self, request, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(context)
+        context["message"] = request.POST.get('message')
+        context["sqs"] = request.POST.get('sqs')
+        print("BOTO3 Clinet")
+        sqs_client = boto3.client('sqs')
+        print("BOTO3 get_queue_url")
+        send_sqs = sqs_client.get_queue_url(QueueName=request.POST.get('sqs'))['QueueUrl']
+        print(f'SQS=[{send_sqs}]')
+        dt_now = datetime.datetime.now()
+        print("BOTO3 send_message")
+        response = sqs_client.send_message(
+            QueueUrl=send_sqs,
+            MessageBody='{SendMessage:"ABC"}',
+            MessageGroupId='sqs_event',
+            MessageDeduplicationId=dt_now,
+            )
+        responsed_feiled = response.get('Failed')
+        if responsed_feiled:
+          context["message"]="send_messages ERROR"
+          print(responsed_feiled)
+        else:
+          context["message"]="send_messages SUCCESS"
+        return render(request, self.template_name, context=context)
+    

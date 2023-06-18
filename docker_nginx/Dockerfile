@@ -1,6 +1,6 @@
 # 使用するイメージを設定
 FROM nginx
-USER root
+#USER root
 
 ENV DOCKER_DIR="./docker_nginx"
 
@@ -27,7 +27,7 @@ COPY ./*.html /var/www/html/
 # ローカルのStaticをコピー
 COPY ./workspace/django_sql/static /static
 
-RUN apt-get install -y vim less
+#RUN apt-get install -y vim less
 
 # PORT開放
 EXPOSE 80

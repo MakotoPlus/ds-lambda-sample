@@ -1,0 +1,12 @@
+<html>
+<body>
+  Create</br>
+  
+  <form method="POST"> {% csrf_token %}
+    sqs <input type="text" name="sqs" value={{sqs}} /><br/>
+    message <input type="text" name="message" value={{ message }} /><br/>
+    <button class="form-control btn btn-primary" type="submit">登録</button>
+  </form>
+
+</body>
+</html>

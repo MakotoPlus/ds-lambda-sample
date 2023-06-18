@@ -1,0 +1,30 @@
+[
+  {
+    "model": "myall.MTag",
+    "pk": 1,
+    "fields": {
+      "name": "test01"
+    }
+  }
+  ,{
+    "model": "myall.MTag",
+    "pk": 2,
+    "fields": {
+      "name": "test02"
+    }
+  }
+  ,{
+    "model": "myall.MTag",
+    "pk": 3,
+    "fields": {
+      "name": "test03"
+    }
+  }
+  ,{
+    "model": "myall.MTag",
+    "pk": 9,
+    "fields": {
+      "name": "no link"
+    }
+  }
+]
