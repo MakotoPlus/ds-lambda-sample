@@ -1,5 +1,6 @@
 import logging
-import datetime
+#import datetime
+import uuid
 import boto3
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
@@ -128,13 +129,13 @@ class MessageView(TemplateView):
         print("BOTO3 get_queue_url")
         send_sqs = sqs_client.get_queue_url(QueueName=request.POST.get('sqs'))['QueueUrl']
         print(f'SQS=[{send_sqs}]')
-        dt_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        #dt_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         print("BOTO3 send_message")
         response = sqs_client.send_message(
             QueueUrl=send_sqs,
             MessageBody='{SendMessage:"ABC"}',
             MessageGroupId='sqs_event',
-            MessageDeduplicationId=dt_now,
+            MessageDeduplicationId=str(uuid.uuid4()),
             )
         responsed_feiled = response.get('Failed')
         if responsed_feiled:
