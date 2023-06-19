@@ -130,7 +130,7 @@ class MessageView(TemplateView):
         print("BOTO3 send_message")
         print(context["message"])
         sqs_message = {
-            "id": uuid.uuid4(),
+            "id": str(uuid.uuid4()),
             "SendMessage": str(context["message"])
         }
         response = sqs_client.send_message(
