@@ -41,8 +41,7 @@ class MessageView(TemplateView):
         cache = SecretCache(config = cache_config, client = client)
         response = cache.get_secret_string(secret_id=SERCRET_ID)
         print(response)
-        params = json.loads(response['SecretString'])
-        
+        params = json.loads(response)
         context["message"] = params['sercretid']
         return context
 
