@@ -6,6 +6,9 @@ import boto3
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
+import botocore 
+import botocore.session 
+from aws_secretsmanager_caching import SecretCache, SecretCacheConfig 
 
 # シークレットマネージャのID
 SERCRET_ID = 'arn:aws:secretsmanager:ap-northeast-1:847754671288:secret:dev/test/sercret-mIeZux'
@@ -24,11 +27,22 @@ class MessageView(TemplateView):
         #print(kwargs)
         context = super().get_context_data(**kwargs)
         context['sqs'] = 'sqs_event'
-        client = boto3.client('secretsmanager')
-        response = client.get_secret_value(SecretId=SERCRET_ID)
-        print("SERCRED-RESPONSE------------")
+        #
+        # secretsmanager
+        #
+        #client = boto3.client('secretsmanager')
+        #response = client.get_secret_value(SecretId=SERCRET_ID)
+        #print("SERCRED-RESPONSE------------")
+        #print(response)
+        #params = json.loads(response['SecretString'])
+        
+        client = botocore.session.get_session().create_client('secretsmanager')
+        cache_config = SecretCacheConfig()
+        cache = SecretCache(config = cache_config, client = client)
+        response = cache.get_secret_string(secret_id=SERCRET_ID)
         print(response)
         params = json.loads(response['SecretString'])
+        
         context["message"] = params['sercretid']
         return context
 
