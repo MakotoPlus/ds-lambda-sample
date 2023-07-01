@@ -11,6 +11,6 @@ urlpatterns = [
   path('adjustlist/line/', views.LineView.as_view(), name='adjustlist_line'),
   path('adjust/datail/<int:pk>', views.AdjustDetailView.as_view(), name='adjust_detail'),
   path('adjustlist/', views.AdjustListView.as_view(), name='adjustlist'),
-  path('message/', views.MessageView.as_view(), name='message'),
+  path('sqs_message/', include('sqs_message.urls')),
   path('', views.index, name='index'),
 ]
