@@ -18,3 +18,4 @@ mock==5.0.2
 pytest-django==4.5.2
 boto3
 aws-secretsmanager-caching
+Faker
