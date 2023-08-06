@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'django_sql.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'test_db.sqlite3'),
     }
 }
 
@@ -179,7 +179,7 @@ LOGGING = {
 '''
 LOGER_LEVEL = 'DEBUG'
 DJANGO_LOG_LEVEL = 'INFO'
-DB_LOG_LEVEL = 'DEBUG'
+DB_LOG_LEVEL = 'INFO'
 LOG_DIR = os.path.join(BASE_DIR, "log/")
 LOGGING = {
     'version': 1,
@@ -212,10 +212,16 @@ LOGGING = {
         'django.db': {
             'handlers': ['console'],
             'level': DB_LOG_LEVEL,
-            'propagate': False,
+            'propagate': True,
         },
         # factoryが出力するログ全般を拾うロガー
         'factory': {
+            'handlers': ['console'],
+            'level': DJANGO_LOG_LEVEL,
+            'propagate': True,
+        },
+        # fakerが出力するログ全般を拾うロガー
+        'faker': {
             'handlers': ['console'],
             'level': DJANGO_LOG_LEVEL,
             'propagate': True,

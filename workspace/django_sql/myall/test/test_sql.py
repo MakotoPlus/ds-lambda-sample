@@ -1,6 +1,8 @@
 import pytest
+import sys
 import factory
 import logging
+from django.core.management import call_command
 from django.db.models import Prefetch
 from myall import models
 from  myall.test.factory import test_factory
@@ -36,8 +38,6 @@ class TestSql():
                     -- 機動戦士ZZガンダム
       Succer        -- J1
     """
-    
-    
     blog = self.create_blog('チェンソーマン', 11)
     tagChenson = test_factory.TagFactory.create(name='チェンソーマン')
     tagAnime = test_factory.TagFactory.create(name='アニメ')    
@@ -49,6 +49,7 @@ class TestSql():
       blog = blog,
       tag = tagAnime
     )
+    
     blogGamdam_1 = self.create_blog('初代機動戦士ガンダム', 9)
     blogGamdam_2 = self.create_blog('機動戦士ZZガンダム', 5)
     tagGamdam = test_factory.TagFactory.create(name='ガンダム')
@@ -94,4 +95,22 @@ class TestSql():
             assert blogTagRecord.blog.title in expected
     # Pytestでは出力されないのでコメントアウト
     # print(connection.queries)
+  
+  def test_003(self, create_blogtag):
+    #b = call_command('dumpdata')
+    #out_file_name = "export_data.json"
+    #sys.stdout = open(out_file_name, mode = "w")
+    #call_command('dumpdata')
+    params = [
+      "dumpdata"
+      ,"--indent"
+      ,"4"
+      ,"-o"
+      ,"20230806_dump_myall.json"
+      ,"myall"
+    ]
+    call_command(*params)
+
+    
+    
     

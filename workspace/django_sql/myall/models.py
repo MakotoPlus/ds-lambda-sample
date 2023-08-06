@@ -97,3 +97,19 @@ class LinePay(models.Model):
     lineid = models.CharField(max_length=30, verbose_name="Lineid")
     tags = GenericRelation(GenericAdjustment)
 
+class Publication(models.Model):
+    title = models.CharField(max_length=30)
+    
+class Author(models.Model):
+    headline = models.CharField(max_length=100)
+    publications = models.ManyToManyField(Publication)
+    
+
+class Company(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+
+class SubCompany(models.Model):
+    id = models.AutoField(primary_key=True)
+    subName =models.CharField(max_length=100)
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
