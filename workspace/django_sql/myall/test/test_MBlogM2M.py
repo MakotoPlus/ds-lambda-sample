@@ -6,7 +6,7 @@
 import pytest
 import factory
 import logging
-
+from django.core.management import call_command
 from myall.test.factory.test_factory import (
   MtagFactory
   ,MBlogTagFactory
@@ -15,7 +15,7 @@ from myall.test.factory.test_factory import (
 logger = logging.getLogger(__name__)
 
 @pytest.mark.django_db
-class TestBlogM2M():
+class TestMBlogM2M():
   @pytest.mark.parametrize(
     "caseno, is_client",
     [
@@ -43,5 +43,23 @@ class TestBlogM2M():
       mbtags = mblog.tags.all()
       for mtag in mbtags:
         logger.debug(f'mblog.tags.name=[{mtag.name}]')
+      # JSON Output
+      self.output_data()
+
     else:
       logger.debug(f'mblog.tags is None')
+
+  def output_data(self):
+    '''
+    Output DBDATA to JSONファイル
+
+    '''
+    params = [
+      "dumpdata"
+      ,"--indent"
+      ,"4"
+      ,"-o"
+      ,"output/20230806_dump_blogM2M.json"
+      ,"myall"
+    ]
+    call_command(*params)

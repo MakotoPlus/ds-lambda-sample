@@ -68,7 +68,8 @@
     "pk": 1,
     "fields": {
         "blog": 1,
-        "tag": 1
+        "tag": 1,
+        "create_date": null
     }
 },
 {
@@ -76,7 +77,8 @@
     "pk": 2,
     "fields": {
         "blog": 1,
-        "tag": 2
+        "tag": 2,
+        "create_date": null
     }
 },
 {
@@ -84,7 +86,8 @@
     "pk": 3,
     "fields": {
         "blog": 2,
-        "tag": 3
+        "tag": 3,
+        "create_date": null
     }
 },
 {
@@ -92,7 +95,8 @@
     "pk": 4,
     "fields": {
         "blog": 2,
-        "tag": 2
+        "tag": 2,
+        "create_date": null
     }
 },
 {
@@ -100,7 +104,8 @@
     "pk": 5,
     "fields": {
         "blog": 3,
-        "tag": 3
+        "tag": 3,
+        "create_date": null
     }
 },
 {
@@ -108,7 +113,8 @@
     "pk": 6,
     "fields": {
         "blog": 3,
-        "tag": 2
+        "tag": 2,
+        "create_date": null
     }
 },
 {
@@ -116,7 +122,8 @@
     "pk": 7,
     "fields": {
         "blog": 4,
-        "tag": 4
+        "tag": 4,
+        "create_date": null
     }
 }
 ]

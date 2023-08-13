@@ -8,15 +8,34 @@ fake = Faker('ja-JP')
 class BlogFactory(DjangoModelFactory):
   class Meta:
     model = models.Blog
+  title = factory.Sequence(lambda n: "Title #%s" % n)
+  content = factory.Sequence(lambda n: "Content-#%s" % n)
+  good_point = factory.Sequence(lambda n: n)
 
 class TagFactory(DjangoModelFactory):
   class Meta:
     model = models.Tag
-    django_get_or_create = ('name',)  
+  name = factory.Sequence(lambda n: "TAG-Name-%s" % n)
 
 class BlogTagFactory(DjangoModelFactory):
   class Meta:
     model = models.BlogTag
+  blog = factory.SubFactory(BlogFactory)
+  tag = factory.SubFactory(TagFactory)
+
+class TagWithBlogFactory(TagFactory):
+  blog_tag = factory.RelatedFactory(
+    BlogTagFactory,
+    factory_related_name = 'tag'
+  )
+
+class TagWithBlogListFactory(TagFactory):
+  blog_tag = factory.RelatedFactoryList(
+    BlogTagFactory,
+    factory_related_name = 'tag',
+    size=1
+  )
+  
 
 class MtagFactory(DjangoModelFactory):
   class Meta:

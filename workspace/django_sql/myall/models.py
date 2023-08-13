@@ -3,7 +3,10 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-
+#
+# 中間モデルを作成
+# ManyToManyFieldで中間テーブルを指定
+#
 class Blog(models.Model):
     title = models.CharField(max_length=10)
     content = models.CharField(max_length=40)
@@ -13,14 +16,14 @@ class Blog(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=10)
-
+    blog_tags = models.ManyToManyField(Blog, through="BlogTag")
     def __str__(self):
         return self.name
 
 class BlogTag(models.Model):
     blog = models.ForeignKey(Blog, related_name="tag_blog", on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, related_name="tag_tag", on_delete=models.CASCADE)
-
+    create_date = models.DateTimeField(null=True)
     class Meta:
         unique_together = ('blog', 'tag',)
 
@@ -113,3 +116,22 @@ class SubCompany(models.Model):
     id = models.AutoField(primary_key=True)
     subName =models.CharField(max_length=100)
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+
+
+class Person(models.Model):
+    name            = models.CharField(max_length=128)
+    def __str__(self):
+        return self.name
+
+class Group(models.Model):
+    name            = models.CharField(max_length=128)
+    members         = models.ManyToManyField(Person, through='Membership', through_fields=('group', 'person'), )
+    def __str__(self):
+        return self.name
+
+class Membership(models.Model):
+    person          = models.ForeignKey(Person, on_delete=models.CASCADE)
+    group           = models.ForeignKey(Group, on_delete=models.CASCADE)
+    date_joined     = models.DateField()
+    invite_reason   = models.CharField(max_length=64)
