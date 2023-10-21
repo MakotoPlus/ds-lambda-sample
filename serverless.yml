@@ -10,6 +10,7 @@ provider:
   name: aws
   stage: ${self:custom.stage}
   runtime: python3.9
+  #region: ${env:AWS_REGION}
   region: ap-northeast-1
   #iam:
   #  role:
@@ -36,6 +37,7 @@ provider:
         - 'iam:PassRole'
         - 'rds:StartDBInstance'
         - 'rds:StopDBInstance'
+        - 'rds:DescribeDBInstances'
       Resource:
         - '*'
   #iam:
@@ -46,16 +48,22 @@ provider:
 #  environment:
 #    variable1: value1
 
+plugins:
+  - serverless-offline
+  # ${env:XXX}とか使うプラグイン
+  - serverless-dotenv-plugin
+  #- serverless-jest-plugin
+  #- serverless-stack-output # Allows us to output endpoint url to json file
+
 # you can add packaging information here
 package:
   patterns:
-    - '!package.json'
-    - '!package-lock.json'
-    - '!README.md'
     - '!node_modules/**'
-    #- '!func/**'
-    - '!**/**/**/Dockerfile'
-    - '!**/**/**/requirements.txt'
+    - '!func/**'
+    - '!*.json'
+    - '!README.md'
+    - '!serverless.*'
+    #- '!**'
     #- include-me.py
     #- include-me-dir/**
 
@@ -63,6 +71,14 @@ package:
 functions:
   hello-sample-01:
     handler: func/hello-sample-01/src/lambda_function.handler
+    package:
+      patterns:
+        - func/hello-sample-01/src/*.py
+      individually: true
 
   on-off:
     handler: func/on-off/src/lambda_function.handler
+    package:
+      patterns:
+        - func/on-off/src/*.py
+      individually: true
