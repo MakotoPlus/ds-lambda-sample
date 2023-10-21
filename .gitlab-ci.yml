@@ -40,6 +40,8 @@ deploy_lambda_function:
     - test_lambda_function
   before_script:
     - npm install -g serverless@3.35.2
+    - npm install serverless-offline@13.2.0 --save-dev
+    - npm install serverless-dotenv-plugin@6.0.0
   script:
     - serverless deploy
   only:
