@@ -1,0 +1,36 @@
+service: ds-lambda-sample
+
+frameworkVersion: '3'
+
+#custom:
+#  run_role: "arn:aws:iam::847754671288:role/SQS-Lambda-Admin}"
+
+provider:
+  name: aws
+  stage: dev
+  runtime: python3.9
+  region: ap-northeast-1
+#  iam:
+#    role:
+#       ${self:custom.run_role}
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+package:
+  patterns:
+    - '!package.json'
+    - '!package-lock.json'
+    - '!README.md'
+    - '!node_modules/**'
+    - '!**/**/**/Dockerfile'
+    - '!**/**/**/requirements.txt'
+    #- include-me.py
+    #- include-me-dir/**
+
+
+functions:
+  hello-sample-01:
+    handler: func/hello-sample-01/src/lambda_function.handler

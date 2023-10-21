@@ -1,0 +1,42 @@
+image: docker:20.10
+services:
+  - docker:dind
+
+# 全てのジョブの前に実行するコスクリプト
+before_script:
+  - docker login gitlab.example.com:4567
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DIR_HELLOW_SAMPLE_01: "./func/hello-sample-01"
+  IMG_HELLOW_SAMPLE_01: img_hello-sample-01
+
+stages:
+  - test
+  - deploy
+
+test_lambda_function:
+  stage: test
+  before_script:
+    - apk add --update py-pip
+  script:
+    # イメージのビルド&Test実行
+    #- docker build -f ./app/lambda_function/Dockerfile.test ./app/lambda_function/ -t $LAMBDA_FUNCTION_IMG
+    - docker build -f $DIR_HELLOW_SAMPLE_01/Dockerfile $DIR_HELLOW_SAMPLE_01/ -t $IMG_HELLOW_SAMPLE_01    
+    - docker run $IMG_HELLOW_SAMPLE_01
+
+
+# Deploy
+deploy_lambda_function:
+  image: node:18
+  stage: deploy
+  dependencies:
+    - test_lambda_function
+  before_script:
+    - npm install -g serverless
+  script:
+    - serverless deploy
+  only:
+    - master
