@@ -39,7 +39,7 @@ deploy_lambda_function:
   dependencies:
     - test_lambda_function
   before_script:
-    - npm install -g serverless
+    - npm install -g serverless@3.35.2
   script:
     - serverless deploy
   only:

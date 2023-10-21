@@ -32,6 +32,10 @@ provider:
         - 'logs:FilterLogEvents'
         - 'sns:Get*'
         - 'sns:List*'
+        - 'iam:GetRole'
+        - 'iam:PassRole'
+        - 'rds:StartDBInstance'
+        - 'rds:StopDBInstance'
       Resource:
         - '*'
   #iam:
@@ -49,6 +53,7 @@ package:
     - '!package-lock.json'
     - '!README.md'
     - '!node_modules/**'
+    - '!func/**'
     - '!**/**/**/Dockerfile'
     - '!**/**/**/requirements.txt'
     #- include-me.py
