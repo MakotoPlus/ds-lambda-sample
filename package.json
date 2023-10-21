@@ -4,6 +4,7 @@
     "serverless": "^3.35.2"
   },
   "devDependencies": {
+    "serverless-dotenv-plugin": "^6.0.0",
     "serverless-offline": "^13.2.0"
   },
   "name": "hello-sample-01"
