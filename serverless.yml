@@ -53,7 +53,7 @@ package:
     - '!package-lock.json'
     - '!README.md'
     - '!node_modules/**'
-    - '!func/**'
+    #- '!func/**'
     - '!**/**/**/Dockerfile'
     - '!**/**/**/requirements.txt'
     #- include-me.py
