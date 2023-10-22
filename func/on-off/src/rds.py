@@ -27,9 +27,9 @@ class RdsCtl():
       if False == result:
         return
     if self.event[DICT_SWITCH_KEY] == SWITCH_ON:
-      self.__db_start(self.event)
+      self.__db_start()
     else:
-      self.__db_stop(self.event)
+      self.__db_stop()
   
   def __check_event_dict(self, event) -> dict:
     result_dict = copy.deepcopy(event)
