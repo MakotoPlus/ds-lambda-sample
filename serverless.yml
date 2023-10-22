@@ -2,15 +2,17 @@ service: ds-lambda-sample
 
 frameworkVersion: '3'
 
+useDotenv: true
 custom:
   stage: ${opt:stage, 'dev'}
+  #region: ${env:AWS_REGION}
   #run_role: "arn:aws:iam::847754671288:role/SQS-Lambda-Admin"
 
 provider:
   name: aws
   stage: ${self:custom.stage}
   runtime: python3.9
-  #region: ${env:AWS_REGION}
+  #region: ${self:custom.region}
   region: ap-northeast-1
   #iam:
   #  role:
@@ -86,7 +88,7 @@ functions:
       - schedule:
           rate: cron(0 15 * * ? *)
           name: on-schduler
-          description: 'RDS ON SCHDULER'
+          description: 'RDS ON SCHEDULE'
           input:
             switch: "on"
             region: "ap-northeast-1"
@@ -94,7 +96,7 @@ functions:
       - schedule:  
           rate: cron(50 14 * * ? *)
           name: off-schduler
-          description: 'RDS OFF SCHDULER'
+          description: 'RDS OFF SCHEDULE'
           input:
             switch: "off"
             region: "ap-northeast-1"
