@@ -1,9 +1,7 @@
-import sys
 import datetime
-import urllib.request
 import copy
 import boto3
-from .syukujitsu import HOLIDAY_DATE, HOLIDAY_NAME, Shukujitsu
+from .syukujitsu import HOLIDAY_NAME, Shukujitsu
 
 URL_SYUKUJITSU_CSV = "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
 DICT_SWITCH_KEY = 'switch'
@@ -92,7 +90,7 @@ class RdsCtl():
         print(f'RDS Instance Start Success:[{instance_name}]')
         print(ret)
 
-  def db_stop(self):
+  def __db_stop(self):
     '''
     DB Instans Stop
     '''

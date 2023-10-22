@@ -1,14 +1,9 @@
-import sys
 import datetime
 import urllib.request
-import copy
-import boto3
-
 
 URL_SYUKUJITSU_CSV = "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
 HOLIDAY_NAME = 'name'
 HOLIDAY_DATE = 'date'
-
 
 class Shukujitsu():
   '''
