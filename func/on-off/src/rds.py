@@ -14,7 +14,7 @@ SWITCH_OFF = 'off'
 
 class RdsCtl():
   def __init__(self, event, shukujitsu: Shukujitsu):
-    self.event = self.__check_event_dict(event)
+    self.event = self._check_event_dict(event)
     self.shukujitsu = shukujitsu
 
   def run(self):
@@ -23,15 +23,15 @@ class RdsCtl():
     SWITCH_OFFはいつでもOFFを実行する
     '''
     if self.event[DICT_SWITCH_KEY] == SWITCH_ON:
-      result = self.__is_db_on(self.event[DICT_CHECK_DATE_YYYYMMDD])
+      result = self._is_db_on(self.event[DICT_CHECK_DATE_YYYYMMDD])
       if False == result:
         return
     if self.event[DICT_SWITCH_KEY] == SWITCH_ON:
-      self.__db_start()
+      self._db_start()
     else:
-      self.__db_stop()
+      self._db_stop()
   
-  def __check_event_dict(self, event) -> dict:
+  def _check_event_dict(self, event) -> dict:
     result_dict = copy.deepcopy(event)
     if not (DICT_SWITCH_KEY in event ):
       raise Exception(f'event parameter key is not key:{DICT_SWITCH_KEY}')
@@ -60,13 +60,12 @@ class RdsCtl():
     result_dict[DICT_CHECK_DATE_YYYYMMDD] = check_date_yyyymmdd
     return result_dict
   
-  def __is_db_on(self, check_date) -> bool:
+  def _is_db_on(self, check_date) -> bool:
     weekday = check_date.weekday()
     if (weekday == 5 ) or (weekday == 6):
       print(f"本日は、土,日なのでお休みです({check_date.strftime('%Y/%m/%d')})")
       return False
-    #shykujitsu = Shukujitsu()
-    result = self.shykujitsu.get_shukujitsu(check_date=check_date)
+    result = self.shukujitsu.get_shukujitsu(check_date=check_date)
     print(result)
     if result is not None:
       print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
@@ -74,7 +73,7 @@ class RdsCtl():
     print(f"電源ON!!({check_date.strftime('%Y/%m/%d')})")
     return True
 
-  def __db_start(self):
+  def _db_start(self):
     '''
     DB Instans Start
     '''
@@ -90,7 +89,7 @@ class RdsCtl():
         print(f'RDS Instance Start Success:[{instance_name}]')
         print(ret)
 
-  def __db_stop(self):
+  def _db_stop(self):
     '''
     DB Instans Stop
     '''
