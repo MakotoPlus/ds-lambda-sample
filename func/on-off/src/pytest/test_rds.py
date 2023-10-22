@@ -1,7 +1,10 @@
 import pytest
 import datetime
+#from unittest.mock import patch
 from ..syukujitsu import Shukujitsu
 from ..rds import RdsCtl
+
+
 
 #
 # Build Sample command
@@ -98,7 +101,7 @@ class Test_Rds():
       )
     ]
   )
-  def test_check_event_dict(self, testno, event, expect):    
+  def test_check_event_dict(self, testno, event, expect):
     is_success = expect[0]
     expect_value = expect[1]
     syukujitsu = Shukujitsu()    
@@ -111,3 +114,22 @@ class Test_Rds():
       with pytest.raises(Exception) as e:
         rds_ctl = RdsCtl(event, syukujitsu)
         print(e)
+
+
+  @pytest.mark.parametrize(
+    "testno, event", [
+      (
+        "001",
+        {
+          "check_date_yyyymmdd":"20231006",
+          "switch": "on",
+          "region": "ap-northeast-1",
+          "DBInstanceIdentifier": "instance"
+        }
+      )
+  ])
+  def test_db_on(self, testno, event, mocker):
+    db_start_mock = mocker.MagicMock(return_value=True)
+    rds_ctl = RdsCtl(event, Shukujitsu())
+    mocker.patch.object(rds_ctl, "_db_start", db_start_mock)
+    rds_ctl.run()
