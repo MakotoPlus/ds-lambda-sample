@@ -82,3 +82,22 @@ functions:
       patterns:
         - func/on-off/src/*.py
       individually: true
+    events:
+      - schedule:
+          rate: cron(0 15 * * ? *)
+          name: on-schduler
+          description: 'RDS ON SCHDULER'
+          input:
+            switch: "on"
+            region: "ap-northeast-1"
+            DBInstanceIdentifier: "onoffabcccccc"
+      - schedule:  
+          rate: cron(50 14 * * ? *)
+          name: off-schduler
+          description: 'RDS OFF SCHDULER'
+          input:
+            switch: "off"
+            region: "ap-northeast-1"
+            DBInstanceIdentifier: "onoffabcccccc"
+
+
