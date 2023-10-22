@@ -1,6 +1,6 @@
 import sys
-from rds import RdsCtl
-from syukujitsu import Shukujitsu
+from .rds import RdsCtl
+from .syukujitsu import Shukujitsu
 
 def handler(event, context):
   print('RDS 起動/停止Lambda Start')
