@@ -40,6 +40,8 @@ provider:
         - 'rds:StartDBInstance'
         - 'rds:StopDBInstance'
         - 'rds:DescribeDBInstances'
+        - 'events:DisableRule'
+        - 'events:EnableRule'
       Resource:
         - '*'
   #iam:
@@ -90,7 +92,7 @@ functions:
           name: on-schduler
           description: 'RDS ON SCHEDULE'
           input:
-            switch: "on"
+            switch: "off"
             region: "ap-northeast-1"
             DBInstanceIdentifier: "onoffabcccccc"
       - schedule:  
@@ -98,7 +100,7 @@ functions:
           name: off-schduler
           description: 'RDS OFF SCHEDULE'
           input:
-            switch: "off"
+            switch: "on"
             region: "ap-northeast-1"
             DBInstanceIdentifier: "onoffabcccccc"
 
