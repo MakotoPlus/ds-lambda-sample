@@ -94,7 +94,8 @@ functions:
           input:
             switch: "off"
             region: "ap-northeast-1"
-            DBInstanceIdentifier: "onoffabcccccc"
+            DBInstanceIdentifier: ["onoffabcccccc"]
+            EventBridge: ['poc-dev-start-django', 'poc-dev-start-nginx_conservice', 'poc-dev-stop-django']
       - schedule:  
           rate: cron(50 14 * * ? *)
           name: off-schduler
@@ -103,5 +104,7 @@ functions:
             switch: "on"
             region: "ap-northeast-1"
             DBInstanceIdentifier: "onoffabcccccc"
+            EventBridge: ['poc-dev-start-django', 'poc-dev-start-nginx_conservice', 'poc-dev-stop-django']
+
 
 
