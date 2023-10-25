@@ -1,5 +1,5 @@
 ## 概要
-- 各関数毎にDockerを作成し起動はPytestを起動しています。これはCICD用です。
+- 各関数毎にDockerを作成し起動はPytestを起動しています。これはCICD用のDockerです。
 
 ## Localテスト方法
 - Docker Build
@@ -10,35 +10,43 @@
   ``` 
   docker run -p 9000:8080 docker-image:test
 
-  ```
- 
+  ``` 
 
 ## 関数
-- hello-sample-01
+- lambda_function.handler
 
 
+## RDS・EventBridge(スケジューラ）起動停止Lambdaの機能説明  
+- 開発環境のリソースの自動起動・自動停止を想定したLambda  
+- 自動起動について  
+  - システム日付が平日のみ起動します。  
+  - 土・日、祝日は、Lambdaを実行しても起動処理は行いません。
+- 自動停止について  
+  - 自動停止はLambda起動時のシステム日付の祝日、平日に関わらず停止を行います。
+- 祝日判定について  
+  - 内閣府サイトから情報を取得して判定しています。(https://www.cao.go.jp/)  
+- RDS
+  - Private Subnetの場合でも動作可能。  
+  - 複数DBインスタンスを操作したい場合は、リスト型でインスタンス名を指定する。  
+- EventBridgeについて
+  - 複数EventBridgeを操作したい場合は、リスト型で名前を指定する。
 
-## RDS 起動停止Lambdaの機能説明  
-- 主に開発で利用しているリソースの自動起動・自動停止を実現するLambda  
-- 自動起動はLambda起動時のシステム日付が、土・日、祝日の場合、Lambdaを実行してもRDSを起動させず、平日時のみ起動させます。  
-- 自動停止はLambda起動時のシステム日付が、土・日、祝日、平日関わらず停止させます。  
-- 実行する時間は、Eventにて指定して下さい。  
-- 祝日情報は内閣府サイトから取得しています。(https://www.cao.go.jp/)  
-- DBがPrivate Subnetの場合でも実行可能。  
-- 複数のDBインスタンスを操作したい場合は、リスト型でインスタンス名を指定する  
 #### 前提条件
-- このLambdaは祝日情報を取得するために外部通信が必要。もし外部通信が出来ない状況であれば祝日でも平日とみなし、RDSの起動を行います。  
-- MultiAZは、インスタンス単位ではなくクラスター単位となり現在は未対応  
-#### Eventパラメータについて
-- 起動時には、EventにJSONパラメータを渡す必要がある  
+- このLambdaは祝日情報を取得するために外部通信が必要。もし外部通信が出来ない状況であれば祝日でも平日とみなし、起動を行います。  
+- RDS
+  - SingleAZのみの対応(MultiAZは、インスタンス単位ではなくクラスター単位となり現在は未対応)  
+- EventBridge
+  - グループ名はdefault以外は未対応
+#### 起動時のパラメータについて
+- 下記フォーマットのパラメータを指定する
 - フォーマット  
 ```JSON
 
  { 
-   'switch': 'on or off',               # 起動 or 停止
+   'switch': 'on' or 'off',               # 起動 or 停止
    'region': ['ap-northeast-1'],          # 停止したいリージョン
-   'DBInstanceIdentifier': 'XXXX',      # DBインスタンス名
-   'check_date_yyyymmdd': '20230131',   # テスト用
+   'DBInstanceIdentifier': ['XXXX'],      # DBインスタンス名
+   'EventBridge': ['XXXX'],               # EventBridge名
   }
 
 ```

@@ -2,9 +2,7 @@ import pytest
 import datetime
 #from unittest.mock import patch
 from ..syukujitsu import Shukujitsu
-from ..rds import RdsCtl
-
-
+from ..rds_ctrl import RdsCtrl
 
 #
 # Build Sample command
@@ -12,7 +10,7 @@ from ..rds import RdsCtl
 #
 # Run Pytest command
 # docker run docker-image-pytest:test
-class Test_Rds():
+class Test_RdsCtrl():
   
   #def test_get_shukujitsu_url_error(self, mocker):
   #  mocker.patch('lambda_function.URL_SYUKUJITSU_CSV', 'https://error.abc.co.jp')
@@ -106,13 +104,13 @@ class Test_Rds():
     expect_value = expect[1]
     syukujitsu = Shukujitsu()    
     if is_success:
-      rds_ctl = RdsCtl(event, syukujitsu)
+      rds_ctl = RdsCtrl(event, syukujitsu)
       if False == ('check_date_yyyymmdd' in expect_value):
         expect_value['check_date_yyyymmdd'] = datetime.date.today()
       assert expect_value == rds_ctl.event
     else:
       with pytest.raises(Exception) as e:
-        rds_ctl = RdsCtl(event, syukujitsu)
+        rds_ctl = RdsCtrl(event, syukujitsu)
         print(e)
 
 
@@ -130,6 +128,6 @@ class Test_Rds():
   ])
   def test_db_on(self, testno, event, mocker):
     db_start_mock = mocker.MagicMock(return_value=True)
-    rds_ctl = RdsCtl(event, Shukujitsu())
-    mocker.patch.object(rds_ctl, "_db_start", db_start_mock)
-    rds_ctl.run()
+    rds_ctrl = RdsCtrl(event, Shukujitsu())
+    mocker.patch.object(rds_ctrl, "_on", db_start_mock)
+    rds_ctrl.run()
