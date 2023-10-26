@@ -31,8 +31,8 @@ class EventBridgeCtrl(OnOff):
     result = self.shukujitsu.get_shukujitsu(check_date=check_date)
     if result is not None:
       print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
-      return False    
-    print(f"電源ON!!({check_date.strftime('%Y/%m/%d')})")
+      return False
+    print(f"起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self):
@@ -42,7 +42,8 @@ class EventBridgeCtrl(OnOff):
     client = boto3.client('events')
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
       ret = client.enable_rule(Name=event_name)
-      print(ret)
+      #print(ret)
+    print("起動 処理完了")
 
   def _off(self):
     '''
@@ -52,5 +53,7 @@ class EventBridgeCtrl(OnOff):
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
       print(f'event_name={event_name}')
       ret = client.disable_rule(Name=event_name)
-      print(ret)
+      #print(ret)
+    print("停止 処理完了")
+
 
