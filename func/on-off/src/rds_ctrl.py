@@ -36,7 +36,7 @@ class RdsCtrl(OnOff):
     if result is not None:
       print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
       return False
-    print(f"起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    print(f"RDS 起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
 
@@ -72,4 +72,4 @@ class RdsCtrl(OnOff):
         ret = rds.stop_db_instance(DBInstanceIdentifier=instance_name)
         print(f'RDS Instance Stop Success:[{instance_name}]')
         #print(ret)
-    print("停止 処理完了")
+    print("RDS 停止 処理完了")
