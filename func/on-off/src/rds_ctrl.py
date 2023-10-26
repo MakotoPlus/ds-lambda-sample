@@ -35,8 +35,8 @@ class RdsCtrl(OnOff):
     result = self.shukujitsu.get_shukujitsu(check_date=check_date)
     if result is not None:
       print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
-      return False    
-    print(f"電源ON!!({check_date.strftime('%Y/%m/%d')})")
+      return False
+    print(f"起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
 
@@ -54,7 +54,7 @@ class RdsCtrl(OnOff):
       else:
         ret = rds.start_db_instance(DBInstanceIdentifier=instance_name)
         print(f'RDS Instance Start Success:[{instance_name}]')
-        print(ret)
+        #print(ret)
 
 
   def _off(self):
@@ -71,4 +71,5 @@ class RdsCtrl(OnOff):
       else:
         ret = rds.stop_db_instance(DBInstanceIdentifier=instance_name)
         print(f'RDS Instance Stop Success:[{instance_name}]')
-        print(ret)
+        #print(ret)
+    print("停止 処理完了")

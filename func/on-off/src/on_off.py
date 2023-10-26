@@ -71,7 +71,7 @@ class OnOff(metaclass=ABCMeta):
   @abstractmethod
   def _on(self):
     '''
-    電源ONメソッド
+    起動メソッド
     '''
     pass
 
@@ -79,6 +79,6 @@ class OnOff(metaclass=ABCMeta):
   @abstractmethod
   def _off(self):
     '''
-    電源OFFメソッド
+    停止メソッド
     '''
     pass
