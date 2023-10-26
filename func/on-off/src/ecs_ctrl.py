@@ -47,7 +47,7 @@ class EcsCtrl(OnOff):
     if result is not None:
       print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
       return False
-    print(f"起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    print(f"ECS起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self):
@@ -62,7 +62,7 @@ class EcsCtrl(OnOff):
            service=ecs_service_value[self.DICT_SERVICE_KEY],
            desiredCount=ecs_service_value[self.DICT_DESIRED_COUNT_KEY])
       print(ret)
-    print('起動 処理完了')
+    print('ECS起動 処理完了')
 
   def _off(self):
     '''
@@ -77,5 +77,5 @@ class EcsCtrl(OnOff):
            desiredCount = 0
         )
       print(ret)
-    print('停止 処理完了')
+    print('ECS停止 処理完了')
 
