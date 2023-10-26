@@ -97,7 +97,7 @@ functions:
             DBInstanceIdentifier: ["onoffabcccccc"]
             EventBridge: ['poc-dev-start-django', 'poc-dev-start-nginx_conservice', 'poc-dev-stop-django']
             EcsService: {
-              ['cluster': 'DJANGO-SQL-CLASTER', 'service':'double-django', 'desiredCount': 2]
+              ['cluster': 'django_sql_service_connect', 'service':'serv', 'desiredCount': 2]
             }
       - schedule:  
           rate: cron(50 14 * * ? *)
@@ -109,5 +109,5 @@ functions:
             DBInstanceIdentifier: "onoffabcccccc"
             EventBridge: ['poc-dev-start-django', 'poc-dev-start-nginx_conservice', 'poc-dev-stop-django']
             EcsService: {
-              ['cluster': 'DJANGO-SQL-CLASTER', 'service':'double-django', 'desiredCount': 2]
+              ['cluster': 'django_sql_service_connect', 'service':'serv', 'desiredCount': 2]
             }
