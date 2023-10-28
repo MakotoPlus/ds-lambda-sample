@@ -1,8 +1,8 @@
 
 LOG_LEVEL: 'INFO'
 
-OFF-Rate-01: 'cron(0 15 * * ? *)'
-ON-Rate-01: 'cron(50 14 * * ? *)'
+OFF-Rate-01: 'cron(0 3 * * ? *)'
+ON-Rate-01: 'cron(50 2 * * ? *)'
 DBInstanceIdentifier-01:
   - onoffabcccccc
 EventBridge-01:

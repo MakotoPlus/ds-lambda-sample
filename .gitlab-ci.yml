@@ -37,6 +37,21 @@ deploy_lambda_function:
     - npm install serverless-offline@13.2.0 --save-dev
     - npm install serverless-dotenv-plugin@6.0.0
   script:
-    - serverless deploy
+    - serverless deploy --stage $STAGE
+  only:
+    - master
+
+# Deploy
+deploy_lambda_function_stg:
+  image: node:18
+  stage: deploy
+  dependencies:
+    - test_lambda_function
+  before_script:
+    - npm install -g serverless@3.35.2
+    - npm install serverless-offline@13.2.0 --save-dev
+    - npm install serverless-dotenv-plugin@6.0.0
+  script:
+    - serverless deploy --stage stg
   only:
     - master
