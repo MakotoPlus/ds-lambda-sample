@@ -1,8 +1,14 @@
+import os
 import datetime
 import copy
+import logging.config
 import boto3
-from .syukujitsu import HOLIDAY_NAME, Shukujitsu
+from .syukujitsu import Shukujitsu
 from .on_off import OnOff
+
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+
 
 class EcsCtrl(OnOff):
   '''
@@ -24,7 +30,6 @@ class EcsCtrl(OnOff):
     - EcsService: {['cluster': 'cluster name', 'service':'service name', 'desiredCount': N]}
     '''
     event = super(EcsCtrl, self)._check_event_dict(event)
-    # result_dict = copy.deepcopy(event)
     if not (EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY in event ):
       raise Exception(f'event parameter key is not key:{EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY}')
     ecs_service_values = event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
@@ -41,16 +46,19 @@ class EcsCtrl(OnOff):
     return event
 
   def _is_running(self, check_date) -> bool:
-    if not (super(EcsCtrl, self)._is_running(check_date)):
+    '''
+    起動判断
+    - Returns
+      - true: 起動すべき時(土日、祝日でない)
+      - false: 起動すべきではない時     
+    '''
+    result = self.shukujitsu.is_normal_date(check_date=check_date)
+    if not result:
       return False
-    result = self.shukujitsu.get_shukujitsu(check_date=check_date)
-    if result is not None:
-      print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
-      return False
-    print(f"ECS起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"ECS起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
-  def _on(self):
+  def _on(self) -> None:
     '''
     ECS Service Start
     '''
@@ -61,12 +69,13 @@ class EcsCtrl(OnOff):
            cluster=ecs_service_value[self.DICT_CLUSTER_KEY],
            service=ecs_service_value[self.DICT_SERVICE_KEY],
            desiredCount=ecs_service_value[self.DICT_DESIRED_COUNT_KEY])
-      print(ret)
-    print('ECS起動 処理完了')
+      
+      logger.debug(ret)
+    logger.info('ECS停止 処理完了')
 
-  def _off(self):
+  def _off(self) -> None:
     '''
-    ECS Service Start
+    ECS Service Stop
     '''
     client = boto3.client('ecs')
     ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
@@ -76,6 +85,7 @@ class EcsCtrl(OnOff):
            service=ecs_service_value[self.DICT_SERVICE_KEY],
            desiredCount = 0
         )
-      print(ret)
-    print('ECS停止 処理完了')
+      logger.debug('ECS停止 処理完了')
+    logger.info('ECS停止 処理完了')
+
 

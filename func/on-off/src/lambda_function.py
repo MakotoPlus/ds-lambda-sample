@@ -1,3 +1,5 @@
+import os
+import logging
 from .rds_ctrl import RdsCtrl
 from .ecs_ctrl import EcsCtrl
 from .on_off import OnOff
@@ -5,11 +7,14 @@ from .event_bridge_ctrl import EventBridgeCtrl
 from .syukujitsu import Shukujitsu
 
 
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+
 def handler(event, context):
-  print('起動/停止Lambda Start')
+  logger.info('起動/停止Lambda Start')
   for ctrl_obj in get_ctrl_objs(event, Shukujitsu()):
     ctrl_obj.run()      
-  print('起動/停止Lambda 終了')
+  logger.info('起動/停止Lambda 終了')
   return {'result': 'success'}
 
 

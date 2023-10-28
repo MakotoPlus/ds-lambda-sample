@@ -1,4 +1,6 @@
 
+LOG_LEVEL: 'INFO'
+
 ON-Rate-01: 'cron(0 15 * * ? *)'
 OFF-Rate-01: 'cron(50 14 * * ? *)'
 DBInstanceIdentifier-01:

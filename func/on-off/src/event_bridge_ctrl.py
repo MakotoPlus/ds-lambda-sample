@@ -1,9 +1,13 @@
+import os
 import datetime
 import copy
+import logging.config
 import boto3
-from .syukujitsu import HOLIDAY_NAME, Shukujitsu
+from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
 
 class EventBridgeCtrl(OnOff):
   DICT_EVENT_BRIDGE_KEY = 'EventBridge'
@@ -26,34 +30,35 @@ class EventBridgeCtrl(OnOff):
     return result_dict
 
   def _is_running(self, check_date) -> bool:
-    if not (super(EventBridgeCtrl, self)._is_running(check_date)):
+    '''
+    起動判断
+    - Returns
+      - true: 起動すべき時(土日、祝日でない)
+      - false: 起動すべきではない時     
+    '''
+    result = self.shukujitsu.is_normal_date(check_date=check_date)
+    if not result:
       return False
-    result = self.shukujitsu.get_shukujitsu(check_date=check_date)
-    if result is not None:
-      print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
-      return False
-    print(f"EventBridge起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"EventBridge起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
-  def _on(self):
+  def _on(self) -> None:
     '''
     EventBridge Start
     '''
     client = boto3.client('events')
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
       ret = client.enable_rule(Name=event_name)
-      #print(ret)
-    print("EventBridge起動 処理完了")
+      logger.debug(ret)
+    logger.info("EventBridge起動 処理完了")
 
-  def _off(self):
+  def _off(self) -> None:
     '''
-    EventBridge stop
+    EventBridge Stop
     '''
     client = boto3.client('events')
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
-      print(f'event_name={event_name}')
+      logger.debug(f'EventBridge event_name={event_name}')
       ret = client.disable_rule(Name=event_name)
-      #print(ret)
-    print("EventBridge停止 処理完了")
-
-
+      logger.debug(ret)
+    logger.info("EventBridge停止 処理完了")

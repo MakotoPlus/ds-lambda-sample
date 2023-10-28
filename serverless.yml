@@ -41,7 +41,8 @@ provider:
       Resource:
         - '*'
   # you can define service wide environment variables here
-  #environment:
+  environment:
+    LOG_LEVEL: ${self:custom.stg-env.LOG_LEVEL}
 
 plugins:
   - serverless-offline
@@ -64,6 +65,7 @@ package:
 functions:
   on-off:
     handler: func/on-off/src/lambda_function.handler
+    timeout: 120
     package:
       patterns:
         - func/on-off/src/*.py
@@ -71,7 +73,7 @@ functions:
     events:
       - schedule:
           rate: ${self:custom.stg-env.ON-Rate-01}
-          name: on-schduler
+          name: ${self:custom.stage}-on-schduler
           description: 'RDS, EventBridge, ECS ON SCHEDULE'
           input:
             switch: "on"
@@ -81,7 +83,7 @@ functions:
             EcsService: ${self:custom.stg-env.EcsService-01}
       - schedule:  
           rate: ${self:custom.stg-env.OFF-Rate-01}
-          name: off-schduler
+          name: ${self:custom.stage}-off-schduler
           description: 'RDS, EventBridge, ECS OFF SCHEDULE'
           input:
             switch: "off"
