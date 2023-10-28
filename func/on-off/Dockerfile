@@ -8,3 +8,4 @@ RUN pip install -r requirements.txt
 # Copy function code
 COPY * ${LAMBDA_TASK_ROOT}/.
 ENTRYPOINT ["pytest", "-s"]
+#ENTRYPOINT ["pytest", "-s", "pytest.test_ecs_ctrl.py"]

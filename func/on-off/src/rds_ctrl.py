@@ -1,8 +1,13 @@
+import os
 import datetime
 import copy
+import logging
 import boto3
-from .syukujitsu import HOLIDAY_NAME, Shukujitsu
+from .syukujitsu import Shukujitsu
 from .on_off import OnOff
+
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
 
 
 class RdsCtrl(OnOff):
@@ -30,17 +35,20 @@ class RdsCtrl(OnOff):
 
   
   def _is_running(self, check_date) -> bool:
-    if not (super(RdsCtrl, self)._is_running(check_date)):
+    '''
+    起動判断
+    - Returns
+      - true: 起動すべき時(土日、祝日でない)
+      - false: 起動すべきではない時     
+    '''
+    result = self.shukujitsu.is_normal_date(check_date=check_date)
+    if not result:
       return False
-    result = self.shukujitsu.get_shukujitsu(check_date=check_date)
-    if result is not None:
-      print(f"本日は、祝日：{result[HOLIDAY_NAME]}なのでお休みです({check_date.strftime('%Y/%m/%d')})")
-      return False
-    print(f"RDS 起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"RDS 起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
 
-  def _on(self):
+  def _on(self) -> None:
     '''
     DB Instans Start
     '''
@@ -48,16 +56,16 @@ class RdsCtrl(OnOff):
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
       # 起動前に状態確認して既に起動しているのなら何もしない
-      ret = rds.describe_db_instances(DBInstanceIdentifier=instance_name)
-      if "available" == ret["DBInstances"][0]["DBInstanceStatus"]:
-        print(f"RDS Instance 既に起動しています instance:[{instance_name}]")
+      status = self._get_db_instance_status(rds, instance_name)
+      if "available" == status:
+        logger.warning(f"RDS Instance 既に起動しています instance:[{instance_name}]")
       else:
         ret = rds.start_db_instance(DBInstanceIdentifier=instance_name)
-        print(f'RDS Instance Start Success:[{instance_name}]')
-        #print(ret)
+        logger.info(f'RDS Instance Start Success:[{instance_name}]')
+        logger.debug(ret)
 
 
-  def _off(self):
+  def _off(self) -> None:
     '''
     DB Instans Stop
     '''
@@ -65,11 +73,19 @@ class RdsCtrl(OnOff):
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
       # 起動前に状態確認して既に起動しているのなら何もしない
-      ret = rds.describe_db_instances(DBInstanceIdentifier=instance_name)
-      if "stopped" == ret["DBInstances"][0]["DBInstanceStatus"]:
-        print(f"RDS Instance 既に一時的に停止しています instance:[{instance_name}]")
+      status = self._get_db_instance_status(rds, instance_name)
+      if "stopped" == status:
+        logger.warning(f"RDS Instance 既に一時的に停止しています instance:[{instance_name}]")
       else:
         ret = rds.stop_db_instance(DBInstanceIdentifier=instance_name)
-        print(f'RDS Instance Stop Success:[{instance_name}]')
-        #print(ret)
-    print("RDS 停止 処理完了")
+        logger.info(f'RDS Instance Stop Success:[{instance_name}]')
+        logger.debug(ret)
+    logger.info("RDS 停止 処理完了")
+
+
+  def _get_db_instance_status(self, rds, instance_name) -> str:
+    '''
+    RDS インスタンスステータスを返す
+    '''
+    ret = rds.describe_db_instances(DBInstanceIdentifier=instance_name)
+    return ret["DBInstances"][0]["DBInstanceStatus"]

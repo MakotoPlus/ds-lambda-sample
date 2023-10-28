@@ -1,6 +1,13 @@
+import os
+import logging.config
 import copy
 import datetime
 from abc import ABCMeta, abstractmethod
+
+#logging.config.fileConfig('logconf.ini')
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+
 
 class OnOff(metaclass=ABCMeta):
   DICT_SWITCH_KEY = 'switch'
@@ -54,6 +61,7 @@ class OnOff(metaclass=ABCMeta):
       return self._off()
 
 
+  @abstractmethod
   def _is_running(self, check_date) -> bool:
     '''
     起動判断
@@ -61,12 +69,7 @@ class OnOff(metaclass=ABCMeta):
       - true: 起動すべき時
       - false: 起動すべきではない時     
     '''
-    weekday = check_date.weekday()
-    if (weekday == 5 ) or (weekday == 6):
-      print(f"本日は、土,日なのでお休みです({check_date.strftime('%Y/%m/%d')})")
-      return False
-    return True
-
+    pass
 
   @abstractmethod
   def _on(self):
