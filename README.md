@@ -1,22 +1,15 @@
+# Resource Tool
 ## 概要
-- 各関数毎にDockerを作成し起動はPytestを起動しています。これはCICD用のDockerです。
+- 開発環境のECS, RDS, EventBridgeのコスト削減用起動停止Lambda
 
-## Localテスト方法
-- Docker Build
-  ``` 
-  docker build -t docker-image:test .
-  ```
-- Docker 起動(Test)
-  ``` 
-  docker run -p 9000:8080 docker-image:test
-
-  ``` 
-
-## 関数
-- lambda_function.handler
-
-
-## ECS・RDS・EventBridge(スケジューラ）起動停止Lambdaの機能説明  
+#### 前提条件
+- 祝日情報を取得するために外部通信が必要。もし外部通信が出来ない状況であれば祝日でも平日とみなし、起動を行います。  
+- 起動・停止コマンドが正しく実行されたかのチェックのみで本当に起動、停止出来るかはまた別の問題となり検知する機能は有していません。  
+- RDS
+  - SingleAZのみの対応(MultiAZは、インスタンス単位ではなくクラスター単位となり現在は未対応)  
+- EventBridge
+  - グループ名はdefault以外は未対応
+### ECS・RDS・EventBridge(スケジューラ）起動停止Lambdaの機能説明  
 - 開発環境のリソースの自動起動・自動停止を想定したLambda  
 - 自動起動について  
   - システム日付が平日のみ起動します。  
@@ -34,13 +27,6 @@
 - EventBridgeについて  
   - 複数EventBridgeを操作したい場合は、リスト型で名前を指定する。  
 
-#### 前提条件
-- 祝日情報を取得するために外部通信が必要。もし外部通信が出来ない状況であれば祝日でも平日とみなし、起動を行います。  
-- 起動・停止コマンドが正しく実行されたかのチェックのみで本当に起動、停止出来るかはまた別の問題となり検知する機能は有していません。  
-- RDS
-  - SingleAZのみの対応(MultiAZは、インスタンス単位ではなくクラスター単位となり現在は未対応)  
-- EventBridge
-  - グループ名はdefault以外は未対応
 #### Lambda起動時のパラメータについて
 - 下記フォーマットのパラメータを指定する
 - フォーマット  
@@ -60,3 +46,22 @@
 
 ```
 上記のパラメータを設定するのは、serverless/{env}.yml に定義します。
+
+
+### 補足
+- 各関数毎にDockerを作成し起動はPytestを起動しています。  
+- これはCICD用のDockerです。
+
+## 関数
+- lambda_function.handler
+
+## Localテスト方法
+- Docker Build
+  ``` 
+  docker build -t docker-image:test .
+  ```
+- Docker 起動(Test)
+  ``` 
+  docker run -p 9000:8080 docker-image:test
+
+  ``` 

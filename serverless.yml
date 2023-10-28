@@ -1,4 +1,4 @@
-service: ds-lambda-sample
+service: tool-rsc
 
 frameworkVersion: '3'
 
