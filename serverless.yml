@@ -73,7 +73,7 @@ functions:
     events:
       - schedule:
           rate: ${self:custom.stg-env.ON-Rate-01}
-          name: ${self:custom.stage}-on-schduler
+          name: ${self:service}-${self:custom.stage}-on-schduler
           description: 'RDS, EventBridge, ECS ON SCHEDULE'
           input:
             switch: "on"
@@ -83,7 +83,7 @@ functions:
             EcsService: ${self:custom.stg-env.EcsService-01}
       - schedule:  
           rate: ${self:custom.stg-env.OFF-Rate-01}
-          name: ${self:custom.stage}-off-schduler
+          name: ${self:service}-${self:custom.stage}-off-schduler
           description: 'RDS, EventBridge, ECS OFF SCHEDULE'
           input:
             switch: "off"

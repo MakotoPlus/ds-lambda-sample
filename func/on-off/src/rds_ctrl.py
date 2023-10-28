@@ -72,7 +72,7 @@ class RdsCtrl(OnOff):
     rds = boto3.client('rds', region_name=self.event[RdsCtrl.DICT_REGION_KEY])
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
-      # 起動前に状態確認して既に起動しているのなら何もしない
+      # 起動前に状態確認して既に停止しているのなら何もしない
       status = self._get_db_instance_status(rds, instance_name)
       if "stopped" == status:
         logger.warning(f"RDS Instance 既に一時的に停止しています instance:[{instance_name}]")
