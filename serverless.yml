@@ -2,20 +2,16 @@ service: ds-lambda-sample
 
 frameworkVersion: '3'
 
-useDotenv: true
+useDotenv: false
 custom:
   stage: ${opt:stage, 'dev'}
-  #region: ${env:AWS_REGION}
-  #run_role: "arn:aws:iam::847754671288:role/SQS-Lambda-Admin"
+  stg-env: ${file(./serverless/${self:provider.stage}.yml)}
 
 provider:
   name: aws
   stage: ${self:custom.stage}
   runtime: python3.9
-  #region: ${self:custom.region}
   region: ap-northeast-1
-  #iam:
-  #  role:
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -23,7 +19,6 @@ provider:
         - logs:CreateLogStream # default
         - logs:PutLogEvents # default
         # - logs:CreateLogGroup
-        # CloudWatchReacOnlyAccess
         - 'autoscaling:Describe*'
         - 'cloudwatch:Describe*'
         - 'cloudwatch:Get*'
@@ -45,13 +40,8 @@ provider:
         - 'ecs:UpdateService'
       Resource:
         - '*'
-  #iam:
-  #  role:
-  #    ${self:custom.run_role}
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
+  # you can define service wide environment variables here
+  #environment:
 
 plugins:
   - serverless-offline
@@ -65,22 +55,13 @@ package:
   patterns:
     - '!node_modules/**'
     - '!func/**'
+    - '!serverless/**'
     - '!*.json'
     - '!README.md'
     - '!serverless.*'
-    #- '!**'
-    #- include-me.py
-    #- include-me-dir/**
 
 
 functions:
-  hello-sample-01:
-    handler: func/hello-sample-01/src/lambda_function.handler
-    package:
-      patterns:
-        - func/hello-sample-01/src/*.py
-      individually: true
-
   on-off:
     handler: func/on-off/src/lambda_function.handler
     package:
@@ -89,26 +70,22 @@ functions:
       individually: true
     events:
       - schedule:
-          rate: cron(0 15 * * ? *)
+          rate: ${self:custom.stg-env.ON-Rate-01}
           name: on-schduler
           description: 'RDS, EventBridge, ECS ON SCHEDULE'
           input:
             switch: "on"
-            region: "ap-northeast-1"
-            DBInstanceIdentifier: ["onoffabcccccc"]
-            EventBridge: ['poc-dev-start-django', 'poc-dev-start-nginx_conservice', 'poc-dev-stop-django']
-            EcsService: [
-              {'cluster': 'django_sql_service_connect', 'service':'serv', 'desiredCount': 2}
-            ]
+            region: ${self:provider.region}
+            DBInstanceIdentifier: ${self:custom.stg-env.DBInstanceIdentifier-01}
+            EventBridge: ${self:custom.stg-env.EventBridge-01}
+            EcsService: ${self:custom.stg-env.EcsService-01}
       - schedule:  
-          rate: cron(50 14 * * ? *)
+          rate: ${self:custom.stg-env.OFF-Rate-01}
           name: off-schduler
           description: 'RDS, EventBridge, ECS OFF SCHEDULE'
           input:
             switch: "off"
-            region: "ap-northeast-1"
-            DBInstanceIdentifier: "onoffabcccccc"
-            EventBridge: ['poc-dev-start-django', 'poc-dev-start-nginx_conservice', 'poc-dev-stop-django']
-            EcsService: [
-              {'cluster': 'django_sql_service_connect', 'service':'serv', 'desiredCount': 2}
-            ]
+            region: ${self:provider.region}
+            DBInstanceIdentifier: ${self:custom.stg-env.DBInstanceIdentifier-01}
+            EventBridge: ${self:custom.stg-env.EventBridge-01}
+            EcsService: ${self:custom.stg-env.EcsService-01}

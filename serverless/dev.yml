@@ -1,0 +1,15 @@
+
+ON-Rate-01: 'cron(0 15 * * ? *)'
+OFF-Rate-01: 'cron(50 14 * * ? *)'
+DBInstanceIdentifier-01:
+  - onoffabcccccc
+EventBridge-01:
+  - 'poc-dev-start-django'
+  - 'poc-dev-start-nginx_conservice'
+  - 'poc-dev-stop-django'
+EcsService-01:
+  - cluster: django_sql_service_connect
+    services: serv
+    desiredCount: 2
+
+
