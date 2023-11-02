@@ -11,7 +11,5 @@ EventBridge-01:
   - 'poc-dev-stop-django'
 EcsService-01:
   - cluster: django_sql_service_connect
-    services: serv
+    service: serv
     desiredCount: 2
-
-
