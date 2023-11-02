@@ -37,7 +37,7 @@
    'region': ['ap-northeast-1'],          # 停止したいリージョン
    'EcsService': [{
       'cluster': 'ecs cluster name'       # ECSクラスター名
-      'services': 'ecs servicename'       # ECSサービス名
+      'service': 'ecs servicename'        # ECSサービス名
       'desiredCount': 2                   # 起動数
    }],
    'DBInstanceIdentifier': ['XXXX'],      # DBインスタンス名

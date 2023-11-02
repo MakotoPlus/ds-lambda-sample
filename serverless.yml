@@ -1,4 +1,4 @@
-service: tool-rsc
+service: tool-service-ctrl
 
 frameworkVersion: '3'
 
