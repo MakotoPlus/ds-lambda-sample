@@ -1,9 +1,17 @@
+import os
 import pytest
 import datetime
+import logging.config
+import logging
+
 #from unittest.mock import patch
 from ..syukujitsu import Shukujitsu
 from ..rds_ctrl import RdsCtrl
 from ..lambda_function import handler
+
+logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
+logger = logging.getLogger(__name__)
+
 
 class Test_Lambda():
   @pytest.mark.parametrize(

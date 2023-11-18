@@ -7,7 +7,6 @@ from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
 logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
 
 
 class RdsCtrl(OnOff):
