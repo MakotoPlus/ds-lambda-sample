@@ -1,12 +1,10 @@
 import os
-import logging.config
+import logging
 import copy
 import datetime
 from abc import ABCMeta, abstractmethod
 
-#logging.config.fileConfig('logconf.ini')
 logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
 
 
 class OnOff(metaclass=ABCMeta):

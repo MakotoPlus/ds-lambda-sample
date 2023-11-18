@@ -1,13 +1,12 @@
 import os
 import datetime
 import copy
-import logging.config
+import logging
 import boto3
 from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
 logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
 
 
 class EcsCtrl(OnOff):
@@ -71,7 +70,7 @@ class EcsCtrl(OnOff):
            desiredCount=ecs_service_value[self.DICT_DESIRED_COUNT_KEY])
       
       logger.debug(ret)
-    logger.info('ECS停止 処理完了')
+    logger.info('ECS起動 処理完了')
 
   def _off(self) -> None:
     '''

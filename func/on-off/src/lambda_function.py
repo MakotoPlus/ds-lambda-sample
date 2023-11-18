@@ -1,14 +1,15 @@
 import os
 import logging
+import logging.config
 from .rds_ctrl import RdsCtrl
 from .ecs_ctrl import EcsCtrl
 from .on_off import OnOff
 from .event_bridge_ctrl import EventBridgeCtrl
 from .syukujitsu import Shukujitsu
 
-
+logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
 logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+
 
 def handler(event, context):
   logger.info('起動/停止Lambda Start')
