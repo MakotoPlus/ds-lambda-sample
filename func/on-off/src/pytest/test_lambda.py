@@ -22,7 +22,8 @@ class Test_Lambda():
           "check_date_yyyymmdd":"20231006",
           "switch": "on",
           "region": "ap-northeast-1",
-          "DBInstanceIdentifier": "instance"
+          "DBInstanceIdentifier": "instance",
+          "EC2": {}
         }
       )
   ])

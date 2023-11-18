@@ -18,7 +18,7 @@ class StopMode(Enum):
 
 class Ec2Ctrl(OnOff):
   '''
-  ECS サービスのタスク数を設定する
+  EC2 サービスのタスク数を設定する
   '''
   DICT_EVENT_EC2_SERVICE_KEY = 'EC2'
   DICT_INSTANCE_KEY = 'instance'
