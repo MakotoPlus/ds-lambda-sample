@@ -1,9 +1,15 @@
+import os
 import pytest
 import datetime
-#from unittest.mock import patch
+import logging
+from logging import getLogger
+from ..logging_config import LOGGING_CONFIG 
 from ..syukujitsu import Shukujitsu
 from ..ecs_ctrl import EcsCtrl
 from ..on_off import OnOff
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 class Test_EcsCtrl():
   @pytest.mark.parametrize(

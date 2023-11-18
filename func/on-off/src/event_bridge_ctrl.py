@@ -1,13 +1,13 @@
 import os
 import datetime
 import copy
-import logging.config
+import logging
 import boto3
 from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
-logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+logger = logging.getLogger()
+
 
 class EventBridgeCtrl(OnOff):
   DICT_EVENT_BRIDGE_KEY = 'EventBridge'

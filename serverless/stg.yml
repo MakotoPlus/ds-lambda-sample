@@ -13,5 +13,6 @@ EcsService-01:
   - cluster: django_sql_service_connect
     service: serv
     desiredCount: 2
-
-
+EC2-01:
+  instance: ec2-instance
+  stopMode: normal

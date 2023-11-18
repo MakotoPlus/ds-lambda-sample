@@ -1,14 +1,16 @@
 import os
 import logging
+from logging import getLogger
 from .rds_ctrl import RdsCtrl
 from .ecs_ctrl import EcsCtrl
+from .ec2_ctrl import Ec2Ctrl
 from .on_off import OnOff
 from .event_bridge_ctrl import EventBridgeCtrl
 from .syukujitsu import Shukujitsu
+from .logging_config import LOGGING_CONFIG 
 
-
-logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 def handler(event, context):
   logger.info('起動/停止Lambda Start')
@@ -26,7 +28,9 @@ def get_ctrl_objs(event, shukujitsu):
     - RDS
     - EventBridge    
     - ECS
+    - EC2
   - OFFの場合は下記順番でオブジェクトのリストを生成する
+    - EC2
     - ECS
     - EventBridge
     - RDS
@@ -40,7 +44,9 @@ def get_ctrl_objs(event, shukujitsu):
     ctrl_objs.append(RdsCtrl(event, shukujitsu))
     ctrl_objs.append(EventBridgeCtrl(event, shukujitsu))
     ctrl_objs.append(EcsCtrl(event, shukujitsu))
+    ctrl_objs.append(Ec2Ctrl(event, shukujitsu))
   elif (switch_value == OnOff.SWITCH_OFF):
+    ctrl_objs.append(Ec2Ctrl(event, shukujitsu))
     ctrl_objs.append(EcsCtrl(event, shukujitsu))
     ctrl_objs.append(EventBridgeCtrl(event, shukujitsu))
     ctrl_objs.append(RdsCtrl(event, shukujitsu))
