@@ -3,6 +3,7 @@ import logging
 import logging.config
 from .rds_ctrl import RdsCtrl
 from .ecs_ctrl import EcsCtrl
+from .ec2_ctrl import Ec2Ctrl
 from .on_off import OnOff
 from .event_bridge_ctrl import EventBridgeCtrl
 from .syukujitsu import Shukujitsu
@@ -27,7 +28,9 @@ def get_ctrl_objs(event, shukujitsu):
     - RDS
     - EventBridge    
     - ECS
+    - EC2
   - OFFの場合は下記順番でオブジェクトのリストを生成する
+    - EC2
     - ECS
     - EventBridge
     - RDS
@@ -41,7 +44,9 @@ def get_ctrl_objs(event, shukujitsu):
     ctrl_objs.append(RdsCtrl(event, shukujitsu))
     ctrl_objs.append(EventBridgeCtrl(event, shukujitsu))
     ctrl_objs.append(EcsCtrl(event, shukujitsu))
+    ctrl_objs.append(Ec2Ctrl(event, shukujitsu))
   elif (switch_value == OnOff.SWITCH_OFF):
+    ctrl_objs.append(Ec2Ctrl(event, shukujitsu))
     ctrl_objs.append(EcsCtrl(event, shukujitsu))
     ctrl_objs.append(EventBridgeCtrl(event, shukujitsu))
     ctrl_objs.append(RdsCtrl(event, shukujitsu))
