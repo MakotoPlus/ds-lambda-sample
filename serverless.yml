@@ -61,7 +61,6 @@ package:
   patterns:
     - '!node_modules/**'
     - '!func/**'
-    - 'func/on-off/logger.config'
     - '!serverless/**'
     - '!*.json'
     - '!README.md'

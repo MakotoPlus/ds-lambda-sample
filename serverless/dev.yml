@@ -1,6 +1,6 @@
 
-LOG_LEVEL: 'INFO'
-LOGGER_CONFIG: "func/on-off/logger.config"
+LOG_LEVEL: 'DEBUG'
+
 
 OFF-Rate-01: 'cron(0 15 * * ? *)'
 ON-Rate-01: 'cron(50 14 * * ? *)'

@@ -1,16 +1,16 @@
 import os
 import logging
-import logging.config
+from logging import getLogger
 from .rds_ctrl import RdsCtrl
 from .ecs_ctrl import EcsCtrl
 from .ec2_ctrl import Ec2Ctrl
 from .on_off import OnOff
 from .event_bridge_ctrl import EventBridgeCtrl
 from .syukujitsu import Shukujitsu
+from .logging_config import LOGGING_CONFIG 
 
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
-
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 def handler(event, context):
   logger.info('起動/停止Lambda Start')

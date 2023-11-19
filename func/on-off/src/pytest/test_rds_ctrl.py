@@ -1,15 +1,16 @@
 import os
 import pytest
 import datetime
-import logging.config
 import logging
+from logging import getLogger
+from ..logging_config import LOGGING_CONFIG 
 
 #from unittest.mock import patch
 from ..syukujitsu import Shukujitsu
 from ..rds_ctrl import RdsCtrl
 
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 
 #

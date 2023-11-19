@@ -2,13 +2,14 @@ import os
 import pytest
 import datetime
 import logging
-import logging.config
+from logging import getLogger
+from ..logging_config import LOGGING_CONFIG 
 from ..syukujitsu import Shukujitsu
 from ..ecs_ctrl import EcsCtrl
 from ..on_off import OnOff
 
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 class Test_EcsCtrl():
   @pytest.mark.parametrize(

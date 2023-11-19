@@ -1,12 +1,13 @@
 import os
 import datetime
 import copy
-import logging
+from logging import getLogger
 import boto3
 from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
-logger = logging.getLogger(__name__)
+
+logger = getLogger()
 
 
 class EcsCtrl(OnOff):

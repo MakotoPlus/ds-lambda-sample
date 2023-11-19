@@ -1,13 +1,14 @@
 import os
 import pytest
 import datetime
-import logging.config
 import logging
+from logging import getLogger
+from ..logging_config import LOGGING_CONFIG 
 
 from ..syukujitsu import Shukujitsu
 
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 class Test_Syukujitsu():
   @pytest.mark.parametrize(
