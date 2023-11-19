@@ -12,6 +12,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   DIR_ON_OFF: ./func/on-off
   IMG_ON_OFF: img_on-off
+  LOG_LEVEL: DEBUG
 
 stages:
   - test

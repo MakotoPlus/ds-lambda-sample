@@ -1,6 +1,6 @@
 FROM public.ecr.aws/lambda/python:3.11
 
-ENV LOG_LEVEL DEBUG
+ENV LOG_LEVEL="DEBUG"
 # Copy requirements.txt
 COPY requirements.txt ${LAMBDA_TASK_ROOT}
 COPY logger.config ${LAMBDA_TASK_ROOT}/.
