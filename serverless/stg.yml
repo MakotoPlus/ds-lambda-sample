@@ -15,6 +15,5 @@ EcsService-01:
     service: serv
     desiredCount: 2
 EC2-01:
-  - instance: ec2-instance
-    stopMode: normal
-
+  instance: ec2-instance
+  stopMode: normal
