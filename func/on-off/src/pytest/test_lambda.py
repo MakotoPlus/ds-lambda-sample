@@ -25,11 +25,16 @@ class Test_Lambda():
           "check_date_yyyymmdd":"20231006",
           "switch": "on",
           "region": "ap-northeast-1",
-          "DBInstanceIdentifier": "instance",
+          "DBInstanceIdentifier": [],
+          "EventBridge": [],
+          "EcsService": [],
           "EC2": {}
         }
       )
   ])
   def test_001(self, testno, event, mocker):
-    #handler(event, None)
-    pass
+    logger.info(f"start {testno}")
+    class MockBoto3():
+      pass
+    mocker.patch("boto3.client", return_value=MockBoto3())
+    handler(event, None)

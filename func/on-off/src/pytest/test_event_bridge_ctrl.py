@@ -81,6 +81,14 @@ class Test_EventBridgeCtrl():
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: ["instanceA", "instanceB"]
         }
       )
+      ,(
+        "004",
+        {
+          OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: []
+        }
+      )
   ])
   def test_event_bridge_on(self, testno, event, mocker):
     bridge_start_mock = mocker.MagicMock(return_value=True)
