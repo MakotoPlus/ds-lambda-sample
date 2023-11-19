@@ -16,10 +16,6 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)
 
 
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
-
-
 class Test_Lambda():
   @pytest.mark.parametrize(
     "testno, event", [
