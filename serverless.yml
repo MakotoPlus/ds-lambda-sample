@@ -47,6 +47,7 @@ provider:
   # you can define service wide environment variables here
   environment:
     LOG_LEVEL: ${self:custom.stg-env.LOG_LEVEL}
+    LOGGER_CONFIG: ${self:custom.stg-env.LOGGER_CONFIG}
 
 plugins:
   - serverless-offline
@@ -60,6 +61,7 @@ package:
   patterns:
     - '!node_modules/**'
     - '!func/**'
+    - 'func/on-off/logger.config'
     - '!serverless/**'
     - '!*.json'
     - '!README.md'

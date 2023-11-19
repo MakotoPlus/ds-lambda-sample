@@ -9,7 +9,6 @@ from .on_off import OnOff
 logger = logging.getLogger(__name__)
 
 
-
 class RdsCtrl(OnOff):
   DICT_DBINSTANCE_IDENTIFIER_KEY = 'DBInstanceIdentifier'
   DICT_REGION_KEY = 'region'
