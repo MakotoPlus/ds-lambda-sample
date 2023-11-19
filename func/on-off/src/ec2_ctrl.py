@@ -9,7 +9,7 @@ from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
 # 下記行を有効にするとDockerでも出力出来る
-logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
+# logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
 logger = logging.getLogger(__name__)
 
 class StopMode(Enum):
@@ -70,8 +70,8 @@ class Ec2Ctrl(OnOff):
       - false: 起動すべきではない時     
     '''
     result = self.shukujitsu.is_normal_date(check_date=check_date)
-    if not result:
-      return False
+    # if not result:
+    #  return False
     logger.info(f"EC2起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
@@ -81,7 +81,7 @@ class Ec2Ctrl(OnOff):
     '''
     client = boto3.client('ec2')
     ec2_instances = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
-    ret = client.start_instances(InstanceIds=[ec2_instances])
+    ret = client.start_instances(InstanceIds=ec2_instances)
     logger.debug(ret)
     logger.info('EC2起動 処理完了')
 

@@ -38,6 +38,10 @@ provider:
         - 'events:DisableRule'
         - 'events:EnableRule'
         - 'ecs:UpdateService'
+        - 'ec2:DescribeInstanceStatus'
+        - 'ec2:ModifyInstanceAttribute'
+        - 'ec2:StopInstances'
+        - 'ec2:StartInstances'
       Resource:
         - '*'
   # you can define service wide environment variables here
@@ -57,6 +61,7 @@ package:
   patterns:
     - '!node_modules/**'
     - '!func/**'
+    - 'func/on-off/logger.config'
     - '!serverless/**'
     - '!*.json'
     - '!README.md'

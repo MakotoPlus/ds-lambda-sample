@@ -1,6 +1,6 @@
 
 LOG_LEVEL: 'INFO'
-LOGGER_CONFIG: "logger.config"
+LOGGER_CONFIG: "func/on-off/logger.config"
 
 OFF-Rate-01: 'cron(0 15 * * ? *)'
 ON-Rate-01: 'cron(50 14 * * ? *)'
@@ -15,5 +15,5 @@ EcsService-01:
     service: serv
     desiredCount: 2
 EC2-01:
-  - instance: ec2-instance
-    stopMode: normal
+  instance: ec2-instance
+  stopMode: normal
