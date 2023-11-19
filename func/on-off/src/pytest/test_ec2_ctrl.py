@@ -1,14 +1,16 @@
 import pytest
 import os
 import logging
-import logging.config
+from logging import getLogger, config
+from ..logging_config import LOGGING_CONFIG 
 import datetime
 from ..syukujitsu import Shukujitsu
 from ..ec2_ctrl import Ec2Ctrl, StopMode
 from ..on_off import OnOff
 
-#logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
+
 #
 # Build Sample command
 # cd on-off
@@ -283,6 +285,38 @@ class Test_Ec2Ctrl():
         '''
         logger.info(f'stop_instances() parameter::{kwargs}')
         raise Exception('call error')          
+
+    mocker.patch("boto3.client", return_value=MockBoto3())
+    Ec2Ctrl(event, Shukujitsu()).run()
+    # 単独のTest時にしかログ出力が有効にならないためこれは通らないためコメントアウト
+    # assert( "task.ec2_ctrl", logging.INFO, "no_instances_status=[instance-name-X01]") in caplog.record_tuples
+
+  @pytest.mark.parametrize(
+    "testno, event",[
+      ( # 未設定のOFF動作確認
+        "001",
+        {
+          OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
+          }
+        },
+      )
+      ,( # 未設定のON動作確認
+        "002",
+        {
+          OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
+          }
+        },
+      )
+    ]
+  )
+  def test_ec2_nothing(self, testno, event, mocker):
+    logger.info(f'test_ec2_nothing::testno={testno}')
+    class MockBoto3():
+      pass
 
     mocker.patch("boto3.client", return_value=MockBoto3())
     Ec2Ctrl(event, Shukujitsu()).run()

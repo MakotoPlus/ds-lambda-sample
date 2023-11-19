@@ -2,15 +2,14 @@ import os
 import datetime
 import copy
 from enum import Enum
-import logging.config
 import logging
+from logging import getLogger, config
 import boto3
 from .syukujitsu import Shukujitsu
 from .on_off import OnOff
 
-# 下記行を有効にするとDockerでも出力出来る
-# logging.config.fileConfig(os.getenv('LOGGER_CONFIG', ''))
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
+
 
 class StopMode(Enum):
   NORMAL = 'normal'
@@ -36,7 +35,7 @@ class Ec2Ctrl(OnOff):
     
     - EC2: {'instance': ['instance name',...], 'stopMode': 'normal' or 'hard'}
     '''
-    logger.debug('check_event_dict::ec2')
+    logger.debug('check_event_dict')
     event = super(Ec2Ctrl, self)._check_event_dict(event)
     if not (Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY in event ):
       raise Exception(f'event parameter key is not key:{Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY}')
@@ -69,9 +68,8 @@ class Ec2Ctrl(OnOff):
       - true: 起動すべき時(土日、祝日でない)
       - false: 起動すべきではない時     
     '''
-    result = self.shukujitsu.is_normal_date(check_date=check_date)
-    # if not result:
-    #  return False
+    if not self.shukujitsu.is_normal_date(check_date=check_date):
+      return False
     logger.info(f"EC2起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
@@ -79,6 +77,9 @@ class Ec2Ctrl(OnOff):
     '''
     EC2 Service Start
     '''
+    if not Ec2Ctrl.DICT_INSTANCE_KEY in self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]:
+      return False
+
     client = boto3.client('ec2')
     ec2_instances = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
     ret = client.start_instances(InstanceIds=ec2_instances)
@@ -89,8 +90,11 @@ class Ec2Ctrl(OnOff):
     '''
     EC2 Service Stop
     '''
-    client = boto3.client('ec2')
-    
+
+    if not Ec2Ctrl.DICT_INSTANCE_KEY in self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]:
+      return False
+
+    client = boto3.client('ec2')    
     #
     # Instance Status 取得
     ec2_instance_names = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
