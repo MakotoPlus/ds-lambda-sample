@@ -1,5 +1,7 @@
-FROM public.ecr.aws/lambda/python:3.11
+FROM public.ecr.aws/lambda/python:3.9
 
+ENV LOG_LEVEL="DEBUG"
+ENV PATH_ROOT=${LAMBDA_TASK_ROOT}
 # Copy requirements.txt
 COPY requirements.txt ${LAMBDA_TASK_ROOT}
 # Install the specified packages
@@ -7,5 +9,7 @@ RUN pip install -r requirements.txt
 
 # Copy function code
 COPY * ${LAMBDA_TASK_ROOT}/.
-ENTRYPOINT ["pytest", "-s"]
-#ENTRYPOINT ["pytest", "-s", "pytest.test_ecs_ctrl.py"]
+#ENTRYPOINT ["pytest"]
+ENTRYPOINT ["pytest", "-svv"]
+#ENTRYPOINT ["pytest", "-svv", "pytest/service/test_rds_ctrl.py"]
+

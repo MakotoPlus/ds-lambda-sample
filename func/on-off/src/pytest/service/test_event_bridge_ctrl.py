@@ -1,9 +1,18 @@
 import pytest
 import datetime
-#from unittest.mock import patch
-from ..syukujitsu import Shukujitsu
-from ..event_bridge_ctrl import EventBridgeCtrl
-from ..on_off import OnOff
+import logging
+import sys, os
+import logging.config
+from logging import getLogger
+
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from service.on_off import OnOff
+from service.event_bridge_ctrl import EventBridgeCtrl
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 #
 # Build Sample command
@@ -74,6 +83,14 @@ class Test_EventBridgeCtrl():
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: ["instanceA", "instanceB"]
+        }
+      )
+      ,(
+        "004",
+        {
+          OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: []
         }
       )
   ])

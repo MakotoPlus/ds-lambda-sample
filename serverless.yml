@@ -38,11 +38,16 @@ provider:
         - 'events:DisableRule'
         - 'events:EnableRule'
         - 'ecs:UpdateService'
+        - 'ec2:DescribeInstanceStatus'
+        - 'ec2:ModifyInstanceAttribute'
+        - 'ec2:StopInstances'
+        - 'ec2:StartInstances'
       Resource:
         - '*'
   # you can define service wide environment variables here
   environment:
     LOG_LEVEL: ${self:custom.stg-env.LOG_LEVEL}
+    PYTHONPATH: "func/on-off/src/"
 
 plugins:
   - serverless-offline
@@ -68,7 +73,7 @@ functions:
     timeout: 120
     package:
       patterns:
-        - func/on-off/src/*.py
+        - func/on-off/src/**
       individually: true
     events:
       - schedule:
@@ -81,6 +86,7 @@ functions:
             DBInstanceIdentifier: ${self:custom.stg-env.DBInstanceIdentifier-01}
             EventBridge: ${self:custom.stg-env.EventBridge-01}
             EcsService: ${self:custom.stg-env.EcsService-01}
+            EC2: ${self:custom.stg-env.EC2-01}
       - schedule:  
           rate: ${self:custom.stg-env.OFF-Rate-01}
           name: ${self:service}-${self:custom.stage}-off-schduler
@@ -91,3 +97,4 @@ functions:
             DBInstanceIdentifier: ${self:custom.stg-env.DBInstanceIdentifier-01}
             EventBridge: ${self:custom.stg-env.EventBridge-01}
             EcsService: ${self:custom.stg-env.EcsService-01}
+            EC2: ${self:custom.stg-env.EC2-01}

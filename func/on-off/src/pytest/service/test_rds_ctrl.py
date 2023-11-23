@@ -1,8 +1,14 @@
-import pytest
-import datetime
-#from unittest.mock import patch
-from ..syukujitsu import Shukujitsu
-from ..rds_ctrl import RdsCtrl
+import pytest, datetime, logging, os, sys
+from logging import getLogger
+import logging.config
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
+from service.rds_ctrl import RdsCtrl
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
+
 
 #
 # Build Sample command

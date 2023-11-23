@@ -1,9 +1,17 @@
 import pytest
 import datetime
-#from unittest.mock import patch
-from ..syukujitsu import Shukujitsu
-from ..ecs_ctrl import EcsCtrl
-from ..on_off import OnOff
+import logging
+import sys, os
+from logging import getLogger
+
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from service.ecs_ctrl import EcsCtrl
+from service.on_off import OnOff
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 class Test_EcsCtrl():
   @pytest.mark.parametrize(

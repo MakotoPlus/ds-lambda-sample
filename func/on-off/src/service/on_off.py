@@ -1,12 +1,9 @@
-import os
-import logging.config
+import logging
 import copy
 import datetime
 from abc import ABCMeta, abstractmethod
 
-#logging.config.fileConfig('logconf.ini')
-logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL', 'WARNING'))
+logger = logging.getLogger()
 
 
 class OnOff(metaclass=ABCMeta):
@@ -15,18 +12,27 @@ class OnOff(metaclass=ABCMeta):
   SWITCH_ON = 'on'
   SWITCH_OFF = 'off'
 
-  def __init__(self, event):
+  def __init__(self, name, event):
+    self._name = name
     self.event = self._check_event_dict(event)
     self.event = self._set_date(self.event)
 
+  #def __init__(self, event):
+  #  self._name = "???"
+  #  self.event = self._check_event_dict(event)
+  #  self.event = self._set_date(self.event)
+
+  @property
+  def name(self):
+    return self._name
 
   def _check_event_dict(self, event) -> dict:
     if not (OnOff.DICT_SWITCH_KEY in event ):
-      raise Exception(f'event parameter key is not key:{OnOff.DICT_SWITCH_KEY}')
+      raise Exception(f'{self.name} event parameter key is not key:{OnOff.DICT_SWITCH_KEY}')
 
     switch_value = event[OnOff.DICT_SWITCH_KEY]
     if OnOff.SWITCH_ON != switch_value and OnOff.SWITCH_OFF != switch_value:
-      raise Exception(f'event parameter value error {switch_value}')
+      raise Exception(f'{self.name} event parameter value error {switch_value}')
     return event
 
 

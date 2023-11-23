@@ -1,7 +1,12 @@
-import pytest
-import datetime
-from ..syukujitsu import Shukujitsu
+import os, pytest, datetime, logging, sys
+from logging import getLogger
 
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
 
 class Test_Syukujitsu():
   @pytest.mark.parametrize(
@@ -11,7 +16,7 @@ class Test_Syukujitsu():
     ]
   )
   def test_is_shukujitsu(self, check_date, expect):    
-    result = Shukujitsu().is_shukujitsu(check_date=check_date)
+    result = Shukujitsu().is_shukujitsu(name='DEBUG-TEST', check_date=check_date)
     assert result == expect
 
   @pytest.mark.parametrize(
