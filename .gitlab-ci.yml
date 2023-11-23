@@ -37,7 +37,7 @@ deploy_lambda_function:
     - npm install serverless-offline@13.2.0 --save-dev
     - npm install serverless-dotenv-plugin@6.0.0
   script:
-    - serverless deploy --stage $STAGE
+    - serverless deploy --stage dev
   only:
     - master
 
