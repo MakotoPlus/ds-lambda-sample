@@ -58,4 +58,4 @@ class EventBridgeCtrl(OnOff):
       logger.debug(f'{self.name} event_name={event_name}')
       ret = client.disable_rule(Name=event_name)
       logger.debug(ret)
-    logger.info("{self.name}停止 処理完了")
+    logger.info(f"{self.name}停止 処理完了")
