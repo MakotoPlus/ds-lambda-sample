@@ -1,14 +1,5 @@
-<<<<<<< HEAD:func/on-off/src/pytest/util/test_syukujitsu.py
 import os, pytest, datetime, logging, sys
 from logging import getLogger
-=======
-import os
-import pytest
-import datetime
-import logging
-from logging import getLogger
-from ..logging_config import LOGGING_CONFIG 
->>>>>>> origin/master:func/on-off/src/pytest/test_syukujitsu.py
 
 sys.path.append(os.getenv("PATH_ROOT","/var/task"))
 from util.logging_config import LOGGING_CONFIG 
