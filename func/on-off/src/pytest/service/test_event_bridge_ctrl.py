@@ -12,6 +12,9 @@ from service.on_off import OnOff
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)
 
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = getLogger(__name__)
+
 #
 # Build Sample command
 # docker build -t docker-image-pytest:test .
