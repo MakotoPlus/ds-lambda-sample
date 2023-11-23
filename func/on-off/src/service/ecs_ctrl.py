@@ -1,14 +1,10 @@
-import os
-import datetime
-import copy
+import os, sys, datetime, copy, boto3
 from logging import getLogger
-import boto3
-from .syukujitsu import Shukujitsu
-from .on_off import OnOff
 
+from service.on_off import OnOff
+from util.syukujitsu import Shukujitsu
 
 logger = getLogger()
-
 
 class EcsCtrl(OnOff):
   '''

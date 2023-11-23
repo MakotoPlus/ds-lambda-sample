@@ -1,10 +1,9 @@
-import os
 import logging
 import copy
 import datetime
 from abc import ABCMeta, abstractmethod
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class OnOff(metaclass=ABCMeta):

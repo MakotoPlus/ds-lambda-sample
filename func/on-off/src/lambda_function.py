@@ -1,13 +1,14 @@
-import os
+import os, sys
 import logging
-from logging import getLogger
-from .rds_ctrl import RdsCtrl
-from .ecs_ctrl import EcsCtrl
-from .ec2_ctrl import Ec2Ctrl
-from .on_off import OnOff
-from .event_bridge_ctrl import EventBridgeCtrl
-from .syukujitsu import Shukujitsu
-from .logging_config import LOGGING_CONFIG 
+from logging import getLogger, config
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from service.on_off import OnOff
+from service.rds_ctrl import RdsCtrl
+from service.ecs_ctrl import EcsCtrl
+from service.ec2_ctrl import Ec2Ctrl
+from service.event_bridge_ctrl import EventBridgeCtrl
+from util.syukujitsu import Shukujitsu
+from util.logging_config import LOGGING_CONFIG 
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)

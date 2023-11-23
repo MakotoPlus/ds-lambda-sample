@@ -47,6 +47,7 @@ provider:
   # you can define service wide environment variables here
   environment:
     LOG_LEVEL: ${self:custom.stg-env.LOG_LEVEL}
+    PATH_ROOT: "func/on-off/src/"
 
 plugins:
   - serverless-offline
@@ -72,7 +73,7 @@ functions:
     timeout: 120
     package:
       patterns:
-        - func/on-off/src/*.py
+        - func/on-off/src/**
       individually: true
     events:
       - schedule:

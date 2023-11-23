@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.11
+FROM public.ecr.aws/lambda/python:3.9
 
 ENV LOG_LEVEL="DEBUG"
 # Copy requirements.txt
@@ -10,5 +10,5 @@ RUN pip install -r requirements.txt
 COPY * ${LAMBDA_TASK_ROOT}/.
 #ENTRYPOINT ["pytest"]
 ENTRYPOINT ["pytest", "-svv"]
-#ENTRYPOINT ["pytest", "-svv", "pytest/test_ec2_ctrl.py"]
+#ENTRYPOINT ["pytest", "-svv", "pytest/service/test_ec2_ctrl.py"]
 #ENTRYPOINT ["pytest", "-svv", "pytest/test_ec2_ctrl.py"]

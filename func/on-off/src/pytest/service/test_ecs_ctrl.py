@@ -3,10 +3,13 @@ import pytest
 import datetime
 import logging
 from logging import getLogger
-from ..logging_config import LOGGING_CONFIG 
-from ..syukujitsu import Shukujitsu
-from ..ecs_ctrl import EcsCtrl
-from ..on_off import OnOff
+import sys
+
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from service.ecs_ctrl import EcsCtrl
+from service.on_off import OnOff
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)

@@ -1,11 +1,9 @@
-import os
-import pytest
-import datetime
-import logging
+import os, pytest, datetime, logging, sys
 from logging import getLogger
-from ..logging_config import LOGGING_CONFIG 
 
-from ..syukujitsu import Shukujitsu
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)

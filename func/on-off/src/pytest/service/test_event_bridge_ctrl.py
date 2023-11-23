@@ -2,10 +2,13 @@ import pytest
 import datetime
 import logging
 from logging import getLogger
-from ..logging_config import LOGGING_CONFIG 
-from ..syukujitsu import Shukujitsu
-from ..event_bridge_ctrl import EventBridgeCtrl
-from ..on_off import OnOff
+
+import sys, os
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
+from service.event_bridge_ctrl import EventBridgeCtrl
+from service.on_off import OnOff
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)

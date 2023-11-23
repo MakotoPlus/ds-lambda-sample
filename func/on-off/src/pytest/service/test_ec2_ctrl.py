@@ -1,12 +1,15 @@
-import pytest
 import os
+import pytest
 import logging
-from logging import getLogger, config
-from ..logging_config import LOGGING_CONFIG 
 import datetime
-from ..syukujitsu import Shukujitsu
-from ..ec2_ctrl import Ec2Ctrl, StopMode
-from ..on_off import OnOff
+from logging import getLogger, config
+
+import sys
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from service.ec2_ctrl import Ec2Ctrl, StopMode
+from service.on_off import OnOff
+from util.logging_config import LOGGING_CONFIG 
+from util.syukujitsu import Shukujitsu
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)

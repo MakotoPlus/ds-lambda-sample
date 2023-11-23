@@ -1,12 +1,10 @@
-import os
-import datetime
-import copy
+import os, sys, logging, boto3
 from enum import Enum
-import logging
-from logging import getLogger, config
-import boto3
-from .syukujitsu import Shukujitsu
-from .on_off import OnOff
+
+import sys
+sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+from util.syukujitsu import Shukujitsu
+from service.on_off import OnOff
 
 logger = logging.getLogger()
 

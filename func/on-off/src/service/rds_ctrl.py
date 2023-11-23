@@ -1,12 +1,9 @@
-import os
-import datetime
-import copy
-import logging
-import boto3
-from .syukujitsu import Shukujitsu
-from .on_off import OnOff
+import copy, logging, boto3
 
-logger = logging.getLogger(__name__)
+from util.syukujitsu import Shukujitsu
+from service.on_off import OnOff
+
+logger = logging.getLogger()
 
 
 class RdsCtrl(OnOff):

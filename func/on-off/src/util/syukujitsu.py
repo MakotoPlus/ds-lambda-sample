@@ -3,7 +3,7 @@ import datetime
 import urllib.request
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 URL_SYUKUJITSU_CSV = "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
 HOLIDAY_NAME = 'name'
