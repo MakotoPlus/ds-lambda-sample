@@ -21,7 +21,7 @@ class Ec2Ctrl(OnOff):
   ECS_RUNNING = 16
 
   def __init__(self, event, shukujitsu: Shukujitsu):
-    super().__init__(event)
+    super().__init__('EC2', event)
     self.shukujitsu = shukujitsu
 
   def _check_event_dict(self, event) -> dict:
@@ -30,10 +30,10 @@ class Ec2Ctrl(OnOff):
     
     - EC2: {'instance': ['instance name',...], 'stopMode': 'normal' or 'hard'}
     '''
-    logger.debug('check_event_dict')
+    logger.debug(f'{self.name} check_event_dict')
     event = super(Ec2Ctrl, self)._check_event_dict(event)
     if not (Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY in event ):
-      raise Exception(f'event parameter key is not key:{Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY}')
+      raise Exception(f'{self.name} event parameter key is not key:{Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY}')
     ec2_service_values = event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]
     if not Ec2Ctrl.DICT_INSTANCE_KEY in ec2_service_values:
       return event
@@ -41,19 +41,19 @@ class Ec2Ctrl(OnOff):
     if type(instances) is str:
       ec2_service_values[Ec2Ctrl.DICT_INSTANCE_KEY] = [instances]
     elif type(instances) is not list:
-      raise Exception(f'event parameter key is type error key:{Ec2Ctrl.DICT_INSTANCE_KEY}')
+      raise Exception(f'{self.name} event parameter key is type error key:{Ec2Ctrl.DICT_INSTANCE_KEY}')
 
     if not Ec2Ctrl.DICT_STOP_MODE_KEY in ec2_service_values:
       ec2_service_values[Ec2Ctrl.DICT_STOP_MODE_KEY] = StopMode.NORMAL.value
-      logger.info("STOP_MODE Nothing")
+      logger.info(f"{self.name} STOP_MODE Nothing")
       return event
 
     if ec2_service_values[Ec2Ctrl.DICT_STOP_MODE_KEY] != StopMode.HARD.value:
       ec2_service_values[Ec2Ctrl.DICT_STOP_MODE_KEY] = StopMode.NORMAL.value
-      logger.info("STOP_MODE NOT HARD")
+      logger.info(f"{self.name} STOP_MODE NOT HARD")
       return event
       
-    logger.info("STOP_MODE HARD")
+    logger.info(f"{self.name} STOP_MODE HARD")
     return event
 
   def _is_running(self, check_date) -> bool:
@@ -63,9 +63,9 @@ class Ec2Ctrl(OnOff):
       - true: 起動すべき時(土日、祝日でない)
       - false: 起動すべきではない時     
     '''
-    if not self.shukujitsu.is_normal_date(check_date=check_date):
+    if not self.shukujitsu.is_normal_date(self.name, check_date=check_date):
       return False
-    logger.info(f"EC2起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"{self.name}起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self) -> None:
@@ -79,7 +79,7 @@ class Ec2Ctrl(OnOff):
     ec2_instances = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
     ret = client.start_instances(InstanceIds=ec2_instances)
     logger.debug(ret)
-    logger.info('EC2起動 処理完了')
+    logger.info(f'{self.name}起動 処理完了 Instance={ec2_instances}')
 
   def _off(self) -> None:
     '''
@@ -100,11 +100,11 @@ class Ec2Ctrl(OnOff):
         if ec2_instance_name == ecs_status['InstanceId']:
           # Instance Status Check
           logger.debug(
-            f'InstanceName=[{ec2_instance_name}] status=[{ecs_status["InstanceState"]["Name"]}]'
+            f'{self.name} InstanceName=[{ec2_instance_name}] status=[{ecs_status["InstanceState"]["Name"]}]'
           )
           if ecs_status["InstanceState"]["Code"] != Ec2Ctrl.ECS_RUNNING:
             logger.info(
-              f'ec2 instances=[{ec2_instance_name}]は起動中ではありませんでした。'  \
+              f'{self.name} instances=[{ec2_instance_name}]は起動中ではありませんでした。'  \
               f'停止処理をスキップします status={ecs_status["InstanceState"]["Code"]}'
             )
             break
@@ -120,14 +120,14 @@ class Ec2Ctrl(OnOff):
             InstanceIds=[ec2_instance_name]
           )
           logger.info(
-            f'ec2 instances=[{ec2_instance_name}]の停止処理を実行しました。'
+            f'{self.name} instances=[{ec2_instance_name}]の停止処理を実行しました。'
           )
           logger.debug(
-            f'ec2 stop_instances=[{ec2_instance_name}] status=[{response}]'
+            f'{self.name} stop_instances=[{ec2_instance_name}] status=[{response}]'
           )
           break
       else:
-        logger.info(f'no_instances_status=[{ec2_instance_name}]')
-    logger.info('EC2停止 処理完了')
+        logger.info(f'{self.name} no_instances_status=[{ec2_instance_name}]')
+    logger.info(f'{self.name}停止 処理完了')
 
 
