@@ -1,7 +1,6 @@
 import os, sys
 import logging
 from logging import getLogger, config
-sys.path.append(os.getenv("PATH_ROOT","/var/task"))
 from service.on_off import OnOff
 from service.rds_ctrl import RdsCtrl
 from service.ecs_ctrl import EcsCtrl

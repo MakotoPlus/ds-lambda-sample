@@ -47,7 +47,7 @@ provider:
   # you can define service wide environment variables here
   environment:
     LOG_LEVEL: ${self:custom.stg-env.LOG_LEVEL}
-    PATH_ROOT: "func/on-off/src/"
+    PYTHONPATH: "func/on-off/src/"
 
 plugins:
   - serverless-offline

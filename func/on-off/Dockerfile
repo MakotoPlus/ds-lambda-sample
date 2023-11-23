@@ -1,6 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.9
 
 ENV LOG_LEVEL="DEBUG"
+ENV PATH_ROOT=${LAMBDA_TASK_ROOT}
 # Copy requirements.txt
 COPY requirements.txt ${LAMBDA_TASK_ROOT}
 # Install the specified packages

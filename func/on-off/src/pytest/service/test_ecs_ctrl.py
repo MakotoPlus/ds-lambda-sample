@@ -1,9 +1,8 @@
-import os
 import pytest
 import datetime
 import logging
+import sys, os
 from logging import getLogger
-import sys
 
 sys.path.append(os.getenv("PATH_ROOT","/var/task"))
 from service.ecs_ctrl import EcsCtrl

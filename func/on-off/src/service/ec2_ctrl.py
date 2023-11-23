@@ -1,8 +1,5 @@
-import os, sys, logging, boto3
+import logging, boto3
 from enum import Enum
-
-import sys
-sys.path.append(os.getenv("PATH_ROOT","/var/task"))
 from util.syukujitsu import Shukujitsu
 from service.on_off import OnOff
 

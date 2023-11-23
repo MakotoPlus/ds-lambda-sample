@@ -1,11 +1,11 @@
+import sys
 import os
 import pytest
 import logging
 import datetime
 from logging import getLogger, config
-
-import sys
 sys.path.append(os.getenv("PATH_ROOT","/var/task"))
+
 from service.ec2_ctrl import Ec2Ctrl, StopMode
 from service.on_off import OnOff
 from util.logging_config import LOGGING_CONFIG 

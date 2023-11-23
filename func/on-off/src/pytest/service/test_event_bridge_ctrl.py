@@ -1,9 +1,8 @@
 import pytest
 import datetime
 import logging
+import os, sys
 from logging import getLogger
-
-import sys, os
 sys.path.append(os.getenv("PATH_ROOT","/var/task"))
 from util.logging_config import LOGGING_CONFIG 
 from util.syukujitsu import Shukujitsu
