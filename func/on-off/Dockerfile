@@ -11,5 +11,5 @@ RUN pip install -r requirements.txt
 COPY * ${LAMBDA_TASK_ROOT}/.
 #ENTRYPOINT ["pytest"]
 ENTRYPOINT ["pytest", "-svv"]
-#ENTRYPOINT ["pytest", "-svv", "pytest/service/test_ec2_ctrl.py"]
-#ENTRYPOINT ["pytest", "-svv", "pytest/test_ec2_ctrl.py"]
+#ENTRYPOINT ["pytest", "-svv", "pytest/service/test_rds_ctrl.py"]
+

@@ -16,7 +16,7 @@ class Test_Syukujitsu():
     ]
   )
   def test_is_shukujitsu(self, check_date, expect):    
-    result = Shukujitsu().is_shukujitsu(check_date=check_date)
+    result = Shukujitsu().is_shukujitsu(name='DEBUG-TEST', check_date=check_date)
     assert result == expect
 
   @pytest.mark.parametrize(
