@@ -53,11 +53,12 @@ class RdsCtrl(OnOff):
       status = self._get_db_instance_status(rds, instance_name)
       if "available" == status:
         logger.warning(f"{self.name} 既に起動しています instance:[{instance_name}]")
-      else:
+      elif "stopped" == status:
         ret = rds.start_db_instance(DBInstanceIdentifier=instance_name)
         logger.info(f'{self.name} Start Success:[{instance_name}]')
         logger.debug(ret)
-
+      else:
+        logger.warning(f'{self.name} Start Errorステータス更新中です :[{instance_name}]')    
 
   def _off(self) -> None:
     '''
@@ -70,11 +71,13 @@ class RdsCtrl(OnOff):
       status = self._get_db_instance_status(rds, instance_name)
       if "stopped" == status:
         logger.warning(f"{self.name} 既に一時的に停止しています instance:[{instance_name}]")
-      else:
+      elif "available" == status:
         ret = rds.stop_db_instance(DBInstanceIdentifier=instance_name)
         logger.info(f'{self.name} Stop Success:[{instance_name}]')
         logger.debug(ret)
-    logger.info("{self.name} 停止 処理完了")
+      else:
+        logger.warning(f'{self.name} Stop Errorステータス更新中です :[{instance_name}]')
+    logger.info(f"{self.name} 停止 処理完了")
 
 
   def _get_db_instance_status(self, rds, instance_name) -> str:

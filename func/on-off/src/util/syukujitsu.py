@@ -25,7 +25,7 @@ class Shukujitsu():
     if len(holiday) <= 0:
       return False
     holiday = holiday[0]
-    logger.info(f"${name} 本日は、祝日：{holiday[HOLIDAY_NAME]}です({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"{name} 本日は、祝日：{holiday[HOLIDAY_NAME]}です({check_date.strftime('%Y/%m/%d')})")
     return True
   
   def is_normal_date(self, name, check_date):

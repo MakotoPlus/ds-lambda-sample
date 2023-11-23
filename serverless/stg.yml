@@ -1,18 +1,17 @@
 
 LOG_LEVEL: 'INFO'
 
-OFF-Rate-01: 'cron(0 3 * * ? *)'
-ON-Rate-01: 'cron(50 2 * * ? *)'
+OFF-Rate-01: 'cron(0 15 * * ? *)'
+ON-Rate-01: 'cron(50 14 * * ? *)'
 DBInstanceIdentifier-01:
-  - onoffabcccccc
+  - mysql-db
+  - postgres-db
 EventBridge-01:
-  - 'poc-dev-start-django'
-  - 'poc-dev-start-nginx_conservice'
-  - 'poc-dev-stop-django'
+  - 
 EcsService-01:
-  - cluster: django_sql_service_connect
-    service: serv
-    desiredCount: 2
+  - 
 EC2-01:
-  instance: ec2-instance
+  instance:
+  - i-03d2687e98dcf93d9
+  - i-0b98519a7c62da6be
   stopMode: normal
