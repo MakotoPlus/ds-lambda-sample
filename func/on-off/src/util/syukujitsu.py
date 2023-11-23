@@ -17,7 +17,7 @@ class Shukujitsu():
   def __init__(self):
     self.__shukujitsu_list = self.__get_shukujitsu_data()
 
-  def is_shukujitsu(self, check_date) -> bool:
+  def is_shukujitsu(self, name, check_date) -> bool:
     '''
     祝日の場合 True
     '''
@@ -25,18 +25,18 @@ class Shukujitsu():
     if len(holiday) <= 0:
       return False
     holiday = holiday[0]
-    logger.info(f"本日は、祝日：{holiday[HOLIDAY_NAME]}です({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"${name} 本日は、祝日：{holiday[HOLIDAY_NAME]}です({check_date.strftime('%Y/%m/%d')})")
     return True
   
-  def is_normal_date(self, check_date):
+  def is_normal_date(self, name, check_date):
     '''
     平日(土、日、祝日以外)の場合 True
     '''
     weekday = check_date.weekday()
     if (weekday == 5 ) or (weekday == 6):
-      logger.info(f"本日は、土,日です({check_date.strftime('%Y/%m/%d')})")
+      logger.info(f"{name} 本日は、土,日です({check_date.strftime('%Y/%m/%d')})")
       return False
-    ret = self.is_shukujitsu(check_date=check_date)
+    ret = self.is_shukujitsu(name, check_date=check_date)
     return not ret
     
   

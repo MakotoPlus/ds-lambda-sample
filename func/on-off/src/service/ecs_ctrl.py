@@ -16,7 +16,7 @@ class EcsCtrl(OnOff):
   DICT_DESIRED_COUNT_KEY = 'desiredCount'
 
   def __init__(self, event, shukujitsu: Shukujitsu):
-    super().__init__(event)
+    super().__init__('ECS', event)
     self.shukujitsu = shukujitsu
 
   def _check_event_dict(self, event) -> dict:
@@ -27,18 +27,18 @@ class EcsCtrl(OnOff):
     '''
     event = super(EcsCtrl, self)._check_event_dict(event)
     if not (EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY in event ):
-      raise Exception(f'event parameter key is not key:{EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY}')
+      raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY}')
     ecs_service_values = event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:
       if not (EcsCtrl.DICT_CLUSTER_KEY in ecs_service_value):
-        raise Exception(f'event parameter key is not key:{EcsCtrl.DICT_CLUSTER_KEY}')
+        raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_CLUSTER_KEY}')
       if not (EcsCtrl.DICT_SERVICE_KEY in ecs_service_value):
-        raise Exception(f'event parameter key is not key:{EcsCtrl.DICT_SERVICE_KEY}')
+        raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_SERVICE_KEY}')
       if not (EcsCtrl.DICT_DESIRED_COUNT_KEY in ecs_service_value):
-        raise Exception(f'event parameter key is not key:{EcsCtrl.DICT_DESIRED_COUNT_KEY}')
+        raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_DESIRED_COUNT_KEY}')
       desired_count_value = ecs_service_value[EcsCtrl.DICT_DESIRED_COUNT_KEY]
       if not (isinstance(desired_count_value, int)):
-        raise Exception(f'event parameter key is not type error:{type(desired_count_value)}')
+        raise Exception(f'{self.name} event parameter key is not type error:{type(desired_count_value)}')
     return event
 
   def _is_running(self, check_date) -> bool:
@@ -48,10 +48,10 @@ class EcsCtrl(OnOff):
       - true: 起動すべき時(土日、祝日でない)
       - false: 起動すべきではない時     
     '''
-    result = self.shukujitsu.is_normal_date(check_date=check_date)
+    result = self.shukujitsu.is_normal_date(name=self.name, check_date=check_date)
     if not result:
       return False
-    logger.info(f"ECS起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
+    logger.info(f"{self.name}起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self) -> None:
@@ -67,7 +67,7 @@ class EcsCtrl(OnOff):
            desiredCount=ecs_service_value[self.DICT_DESIRED_COUNT_KEY])
       
       logger.debug(ret)
-    logger.info('ECS起動 処理完了')
+    logger.info(f'{self.name}起動 処理完了')
 
   def _off(self) -> None:
     '''
@@ -81,7 +81,9 @@ class EcsCtrl(OnOff):
            service=ecs_service_value[self.DICT_SERVICE_KEY],
            desiredCount = 0
         )
-      logger.debug('ECS停止 処理完了')
-    logger.info('ECS停止 処理完了')
+      logger.info(f'{self.name}停止処理を実行しました。 '  \
+        f'cluster={ecs_service_value[self.DICT_CLUSTER_KEY]} ' \
+        f'service={ecs_service_value[self.DICT_SERVICE_KEY]}')
+    logger.info(f'{self.name}停止 処理完了')
 
 
