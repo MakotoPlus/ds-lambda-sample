@@ -17,11 +17,6 @@ class OnOff(metaclass=ABCMeta):
     self.event = self._check_event_dict(event)
     self.event = self._set_date(self.event)
 
-  #def __init__(self, event):
-  #  self._name = "???"
-  #  self.event = self._check_event_dict(event)
-  #  self.event = self._set_date(self.event)
-
   @property
   def name(self):
     return self._name
@@ -58,13 +53,18 @@ class OnOff(metaclass=ABCMeta):
     - SWITCH_OFF:=いつでも実行メソッド _off()を呼出す
     '''
     if self.event[OnOff.DICT_SWITCH_KEY] == OnOff.SWITCH_ON:
-      result = self._is_running(self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD])
-      if False == result:
-        return
-    if self.event[OnOff.DICT_SWITCH_KEY] == OnOff.SWITCH_ON:
-      return self._on()
+      logger.info(f"{self.name}起動 処理開始" \
+        f"({self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD].strftime('%Y/%m/%d')})")
+      if self._is_running(self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD]):
+        self._on()
+      logger.info(f"{self.name}起動 処理完了" \
+        f"({self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD].strftime('%Y/%m/%d')})")        
     else:
-      return self._off()
+      logger.info(f"{self.name}停止 処理開始" \
+        f"({self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD].strftime('%Y/%m/%d')})")      
+      self._off()
+      logger.info(f"{self.name}停止 処理完了" \
+        f"({self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD].strftime('%Y/%m/%d')})")        
 
 
   @abstractmethod

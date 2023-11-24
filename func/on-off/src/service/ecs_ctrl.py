@@ -51,7 +51,6 @@ class EcsCtrl(OnOff):
     result = self.shukujitsu.is_normal_date(name=self.name, check_date=check_date)
     if not result:
       return False
-    logger.info(f"{self.name}起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self) -> None:
@@ -67,7 +66,6 @@ class EcsCtrl(OnOff):
            desiredCount=ecs_service_value[self.DICT_DESIRED_COUNT_KEY])
       
       logger.debug(ret)
-    logger.info(f'{self.name}起動 処理完了')
 
   def _off(self) -> None:
     '''
@@ -84,6 +82,5 @@ class EcsCtrl(OnOff):
       logger.info(f'{self.name}停止処理を実行しました。 '  \
         f'cluster={ecs_service_value[self.DICT_CLUSTER_KEY]} ' \
         f'service={ecs_service_value[self.DICT_SERVICE_KEY]}')
-    logger.info(f'{self.name}停止 処理完了')
 
 
