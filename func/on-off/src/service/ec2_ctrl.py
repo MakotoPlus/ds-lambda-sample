@@ -126,5 +126,3 @@ class Ec2Ctrl(OnOff):
           break
       else:
         logger.info(f'{self.name} no_instances_status=[{ec2_instance_name}]')
-
-
