@@ -1,4 +1,5 @@
-import logging, boto3
+import logging
+import boto3
 from enum import Enum
 from util.syukujitsu import Shukujitsu
 from service.on_off import OnOff
