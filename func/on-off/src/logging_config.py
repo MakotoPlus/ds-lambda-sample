@@ -24,10 +24,10 @@ LOGGING_CONFIG = {
     },
     'formatters': {
         'info': {
-            'format': '%(asctime)s,[%(levelname)s],%(process)d,%(filename)s::%(lineno)s,%(message)s'
+            'format': '%(asctime)s,[%(levelname)s],%(process)d,%(message)s,%(filename)s::%(lineno)s'
         },
         'error': {
-            'format': '%(asctime)s,[%(levelname)s],%(process)d,%(filename)s::%(lineno)s,%(message)s'
+            'format': '%(asctime)s,[%(levelname)s],%(process)d,%(message)s,%(filename)s::%(lineno)s'
         },
     },
 
