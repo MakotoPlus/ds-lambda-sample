@@ -76,6 +76,9 @@
 ### 関数
 - func/on-off/src/lambda_function.handler
 
+### 関数
+- func/on-off/src/lambda_function.handler
+
 ### 補足
 - DockerはPytestを実行します。
 
