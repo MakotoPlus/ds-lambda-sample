@@ -35,10 +35,7 @@
   - EC2に停止保護されている場合は、スキップ(Default)するか解除して停止するか指定できます。
 - EventBridgeについて  
   - 複数EventBridgeを操作したい場合は、リスト型で名前を指定する。  
-<<<<<<< HEAD
 
-=======
->>>>>>> 8c7fe2566ed57e3eaf69100226e2afeccb956254
 ### 利用方法
 1. Lambda起動パラメータ設定
    - serverless/dev.yml
@@ -77,24 +74,13 @@
 
 ```
 
-<<<<<<< HEAD
 
 ### 関数
-=======
-### 関数
-- func/on-off/src/lambda_function.handler
-
-### 関数
->>>>>>> 8c7fe2566ed57e3eaf69100226e2afeccb956254
 - func/on-off/src/lambda_function.handler
 
 ### 補足
 - DockerはPytestを実行します。
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 8c7fe2566ed57e3eaf69100226e2afeccb956254
 ### Pytest方法
 - Docker Build
   ``` 
