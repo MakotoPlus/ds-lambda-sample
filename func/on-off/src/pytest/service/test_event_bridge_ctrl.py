@@ -1,7 +1,8 @@
 import pytest
 import datetime
 import logging
-import sys, os
+import sys
+import os
 import logging.config
 from logging import getLogger
 

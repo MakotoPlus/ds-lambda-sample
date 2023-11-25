@@ -1,4 +1,3 @@
-import os
 import datetime
 import urllib.request
 import logging
