@@ -1,7 +1,6 @@
 import sys
 import os
 import pytest
-import logging
 import datetime
 from logging import getLogger, config
 sys.path.append(os.getenv("PATH_ROOT","/var/task"))
@@ -11,7 +10,7 @@ from service.on_off import OnOff
 from util.logging_config import LOGGING_CONFIG 
 from util.syukujitsu import Shukujitsu
 
-logging.config.dictConfig(LOGGING_CONFIG)
+config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)
 
 #
