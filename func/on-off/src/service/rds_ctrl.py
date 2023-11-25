@@ -38,7 +38,6 @@ class RdsCtrl(OnOff):
     '''
     if not self.shukujitsu.is_normal_date(name=self.name, check_date=check_date):
       return False
-    logger.info(f"{self.name}起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
 
@@ -58,7 +57,7 @@ class RdsCtrl(OnOff):
         logger.info(f'{self.name} Start Success:[{instance_name}]')
         logger.debug(ret)
       else:
-        logger.warning(f'{self.name} Start Errorステータス更新中です :[{instance_name}]')    
+        logger.warning(f'{self.name} ステータス更新中のため処理スキップします :[{instance_name}]')    
 
   def _off(self) -> None:
     '''
@@ -76,8 +75,7 @@ class RdsCtrl(OnOff):
         logger.info(f'{self.name} Stop Success:[{instance_name}]')
         logger.debug(ret)
       else:
-        logger.warning(f'{self.name} Stop Errorステータス更新中です :[{instance_name}]')
-    logger.info(f"{self.name} 停止 処理完了")
+        logger.warning(f'{self.name} ステータス更新中のため処理スキップします :[{instance_name}]')    
 
 
   def _get_db_instance_status(self, rds, instance_name) -> str:

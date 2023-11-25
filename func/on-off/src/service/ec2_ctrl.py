@@ -65,7 +65,6 @@ class Ec2Ctrl(OnOff):
     '''
     if not self.shukujitsu.is_normal_date(self.name, check_date=check_date):
       return False
-    logger.info(f"{self.name}起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self) -> None:
@@ -79,7 +78,6 @@ class Ec2Ctrl(OnOff):
     ec2_instances = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
     ret = client.start_instances(InstanceIds=ec2_instances)
     logger.debug(ret)
-    logger.info(f'{self.name}起動 処理完了 Instance={ec2_instances}')
 
   def _off(self) -> None:
     '''
@@ -128,6 +126,3 @@ class Ec2Ctrl(OnOff):
           break
       else:
         logger.info(f'{self.name} no_instances_status=[{ec2_instance_name}]')
-    logger.info(f'{self.name}停止 処理完了')
-
-

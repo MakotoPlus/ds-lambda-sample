@@ -36,7 +36,6 @@ class EventBridgeCtrl(OnOff):
     result = self.shukujitsu.is_normal_date(name=self.name, check_date=check_date)
     if not result:
       return False
-    logger.info(f"{self.name}起動 処理開始します({check_date.strftime('%Y/%m/%d')})")
     return True
 
   def _on(self) -> None:
@@ -47,7 +46,6 @@ class EventBridgeCtrl(OnOff):
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
       ret = client.enable_rule(Name=event_name)
       logger.debug(ret)
-    logger.info(f"{self.name}起動 処理完了")
 
   def _off(self) -> None:
     '''
@@ -58,4 +56,3 @@ class EventBridgeCtrl(OnOff):
       logger.debug(f'{self.name} event_name={event_name}')
       ret = client.disable_rule(Name=event_name)
       logger.debug(ret)
-    logger.info(f"{self.name}停止 処理完了")
