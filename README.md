@@ -81,7 +81,6 @@
 ### 補足
 - DockerはPytestを実行します。
 
-
 ### Pytest方法
 - Docker Build
   ``` 
