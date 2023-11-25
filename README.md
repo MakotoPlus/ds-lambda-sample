@@ -1,6 +1,8 @@
 # Resource Tool
 ## 概要
-- 開発環境のECS, RDS, EC2, EventBridgeのコスト削減用起動停止Lambda
+- 開発環境のECS, RDS, EC2, EventBridgeのコスト削減用の起動停止Lambda
+- 起動ルール：平日はResourceを起動するが、土、日、祝日は起動しない。
+- 停止ルール：無条件で実行する。
 
 #### 前提条件
 - 祝日情報を取得するために外部通信が必要。もし外部通信が出来ない状況であれば祝日でも平日とみなし、起動を行います。  
@@ -64,15 +66,15 @@
 - これはCICD用のDockerです。
 
 ## 関数
-- lambda_function.handler
+- func/on-off/src/lambda_function.handler
 
 ## Localテスト方法
 - Docker Build
   ``` 
+  cd func/on-off
   docker build -t docker-image:test .
   ```
 - Docker 起動(Test)
   ``` 
   docker run -p 9000:8080 docker-image:test
-
   ``` 
