@@ -6,12 +6,12 @@ ON-Rate-01: 'cron(50 5 * * ? *)'
 DBInstanceIdentifier-01:
   - mysql-db
   - postgres-db
-EventBridge-01:
-  - 
-EcsService-01:
-  - 
+EventBridge-01: []
+EcsService-01: []
 EC2-01:
   instance:
   - i-03d2687e98dcf93d9
   - i-0b98519a7c62da6be
   stopMode: normal
+
+  
