@@ -15,16 +15,15 @@ class EventBridgeCtrl(OnOff):
     super().__init__('EventBridge', event)
     self.shukujitsu = shukujitsu
 
-  def _check_event_dict(self, event) -> dict:
-    event = super(EventBridgeCtrl, self)._check_event_dict(event)
-    result_dict = copy.deepcopy(event)
+  def _check_event_dict(self) -> dict:
+    event = super(EventBridgeCtrl, self)._check_event_dict()
     if not (EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY}')
-    if type(result_dict[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]) is str:
-      result_dict[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY] = [result_dict[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]]
+    if type(event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]) is str:
+      event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY] = [event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]]
     elif type(event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]) is not list:
       raise Exception(f'{self.name} event parameter key is type error key:{EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY}')
-    return result_dict
+    return event
 
   def _is_running(self, check_date) -> bool:
     '''

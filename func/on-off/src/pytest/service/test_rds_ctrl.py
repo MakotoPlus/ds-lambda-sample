@@ -111,13 +111,16 @@ class Test_RdsCtrl():
     syukujitsu = Shukujitsu()    
     if is_success:
       rds_ctl = RdsCtrl(event, syukujitsu)
+      rds_ctl._check_event_dict()
+      rds_ctl._set_date()
       if False == ('check_date_yyyymmdd' in expect_value):
         expect_value['check_date_yyyymmdd'] = datetime.date.today()
       assert expect_value == rds_ctl.event
     else:
       with pytest.raises(Exception) as e:
         rds_ctl = RdsCtrl(event, syukujitsu)
-        print(e)
+        rds_ctl._check_event_dict()
+        rds_ctl._set_date()
 
 
   @pytest.mark.parametrize(

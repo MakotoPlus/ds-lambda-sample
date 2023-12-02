@@ -10,7 +10,6 @@ RUN pip install -r requirements.txt
 # Copy function code
 COPY * ${LAMBDA_TASK_ROOT}/.
 ENTRYPOINT ["pytest"]
-
 #ENTRYPOINT ["pytest", "-svv"]
-#ENTRYPOINT ["pytest", "-svv", "pytest/service/test_rds_ctrl.py"]
+#ENTRYPOINT ["pytest", "-xsvv", "pytest/service/test_rds_ctrl.py"]
 

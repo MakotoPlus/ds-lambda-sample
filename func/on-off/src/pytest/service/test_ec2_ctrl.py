@@ -111,13 +111,17 @@ class Test_Ec2Ctrl():
     syukujitsu = Shukujitsu()    
     if is_success:
       ec2_ctrl = Ec2Ctrl(event, syukujitsu)
+      ec2_ctrl._check_event_dict()
+      ec2_ctrl._set_date()
       if False == ('check_date_yyyymmdd' in expect_value):
         expect_value['check_date_yyyymmdd'] = datetime.date.today()
       assert expect_value == ec2_ctrl.event
     else:
       with pytest.raises(Exception) as e:
         ec2_ctrl(event, syukujitsu)
-        print(e)
+        ec2_ctrl._check_event_dict()
+        ec2_ctrl._set_date()
+
 
   @pytest.mark.parametrize(
     "testno, event",[
