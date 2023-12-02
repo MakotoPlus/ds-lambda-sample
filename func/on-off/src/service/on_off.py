@@ -38,7 +38,6 @@ class OnOff(metaclass=ABCMeta):
       year = s_check_date_yyyymmdd[0:4]
       month = s_check_date_yyyymmdd[4:6]
       dd = s_check_date_yyyymmdd[6:8]
-      print(f'{year}/{month}/{dd} {s_check_date_yyyymmdd}')
       check_date_yyyymmdd = datetime.date(int(year), int(month), int(dd))
     self.event[OnOff.DICT_CHECK_DATE_YYYYMMDD] = check_date_yyyymmdd
     return self.event

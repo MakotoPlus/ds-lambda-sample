@@ -26,32 +26,34 @@ test_lambda_function:
     - docker build -f $DIR_ON_OFF/Dockerfile $DIR_ON_OFF/ -t $IMG_ON_OFF    
     - docker run $IMG_ON_OFF
 
-# Deploy
-deploy_lambda_function:
-  image: node:18
-  stage: deploy
-  dependencies:
-    - test_lambda_function
+
+# Deploy Template
+.deploy_template: &deploy_template
   before_script:
     - npm install -g serverless@3.35.2
     - npm install serverless-offline@13.2.0 --save-dev
     - npm install serverless-dotenv-plugin@6.0.0
+  dependencies:
+    - test_lambda_function
+  image: node:18
+  stage: deploy
   script:
-    - serverless deploy --stage dev
-  only:
-    - master
+    - echo "OPTION_STAGE=${OPTION_STAGE}"
+    - serverless deploy --stage ${OPTION_STAGE}
+
+# Deploy
+deploy_lambda_function:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  variables:
+    OPTION_STAGE: "dev"
+  <<: *deploy_template
 
 # Deploy
 deploy_lambda_function_stg:
-  image: node:18
-  stage: deploy
-  dependencies:
-    - test_lambda_function
-  before_script:
-    - npm install -g serverless@3.35.2
-    - npm install serverless-offline@13.2.0 --save-dev
-    - npm install serverless-dotenv-plugin@6.0.0
-  script:
-    - serverless deploy --stage stg
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "staging"
+  variables:
+    OPTION_STAGE: "stg"
+  <<: *deploy_template
+

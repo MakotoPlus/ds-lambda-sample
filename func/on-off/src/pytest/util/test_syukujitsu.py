@@ -29,8 +29,6 @@ class Test_Syukujitsu():
   def test_get_shukujitsu(self, check_date, expect):    
     result = Shukujitsu().get_shukujitsu(check_date=check_date)
     is_result = None if result is None else True
-    if is_result:
-      print(f"name=[{result['name']}]")
     assert is_result == expect[0]
     if expect[0]:
       assert expect[1] == result['name']
