@@ -1,7 +1,6 @@
 import sys
 import os
 import pytest
-import logging
 import datetime
 from logging import getLogger, config
 sys.path.append(os.getenv("PATH_ROOT","/var/task"))
@@ -11,7 +10,7 @@ from service.on_off import OnOff
 from util.logging_config import LOGGING_CONFIG 
 from util.syukujitsu import Shukujitsu
 
-logging.config.dictConfig(LOGGING_CONFIG)
+config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)
 
 #
@@ -112,13 +111,17 @@ class Test_Ec2Ctrl():
     syukujitsu = Shukujitsu()    
     if is_success:
       ec2_ctrl = Ec2Ctrl(event, syukujitsu)
+      ec2_ctrl._check_event_dict()
+      ec2_ctrl._set_date()
       if False == ('check_date_yyyymmdd' in expect_value):
         expect_value['check_date_yyyymmdd'] = datetime.date.today()
       assert expect_value == ec2_ctrl.event
     else:
       with pytest.raises(Exception) as e:
         ec2_ctrl(event, syukujitsu)
-        print(e)
+        ec2_ctrl._check_event_dict()
+        ec2_ctrl._set_date()
+
 
   @pytest.mark.parametrize(
     "testno, event",[

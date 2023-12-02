@@ -1,8 +1,10 @@
-# Resource Tool
+# AWS Resource Tool
 ## 概要
-- 開発環境のECS, RDS, EC2, EventBridgeのコスト削減用起動停止Lambda
+- 開発環境のECS, RDS, EC2, EventBridgeのコスト削減用の起動停止Lambda
+- 起動ルール：平日はResourceを起動するが、土、日、祝日は起動しない。
+- 停止ルール：無条件で実行する。
 
-#### 前提条件
+### 前提条件
 - 祝日情報を取得するために外部通信が必要。もし外部通信が出来ない状況であれば祝日でも平日とみなし、起動を行います。  
 - 起動・停止コマンドが正しく実行されたかのチェックのみで本当に起動、停止出来るかはまた別の問題となり検知する機能は有していません。  
 - RDS
@@ -12,7 +14,7 @@
 - EventBridge
   - グループ名はdefault以外は未対応
   
-### ECS・RDS・EC2・EventBridge(スケジューラ）起動停止Lambdaの機能説明  
+### 機能説明  
 - 開発環境のリソースの自動起動・自動停止を想定したLambda  
 - 自動起動について  
   - システム日付が平日のみ起動します。  
@@ -34,9 +36,24 @@
 - EventBridgeについて  
   - 複数EventBridgeを操作したい場合は、リスト型で名前を指定する。  
 
-#### Lambda起動時のパラメータについて
-- 下記フォーマットのパラメータを指定する
-- フォーマット  
+### 利用方法
+1. Lambda起動パラメータ設定
+   - serverless/dev.yml
+   - 詳細下段の「Lambda起動時のパラメータについて参照」
+
+2. aws configure 設定
+  
+3. serverless framework install & deploy コマンド
+    ```
+    npm install
+    serverless deploy
+    ```
+
+
+### Lambda起動時のパラメータについて
+- 下記フォーマットのパラメータを指定する。
+- 利用しないリソースでも[ ] などを設定する必要あり
+- ファイル：serverless/{env}.yml 
 ```
 
  { 
@@ -50,29 +67,27 @@
    'DBInstanceIdentifier': ['XXXX'],      # DBインスタンス名
    'EC2' : {                              # EC2
       'instance' : [],                    # EC2インスタンス名
-      'stopMode' : 'normal'  or 'hard'   # 停止モード
+      'stopMode' : 'normal'  or 'hard'    # 停止モード(hardは停止保護されている場合解除して停止します)
    },
    'EventBridge': ['XXXX'],               # EventBridge名
   }
 
 ```
-上記のパラメータを設定するのは、serverless/{env}.yml に定義します。
 
+
+### 関数
+- func/on-off/src/lambda_function.handler
 
 ### 補足
-- 各関数毎にDockerを作成し起動はPytestを起動しています。  
-- これはCICD用のDockerです。
+- DockerはPytestを実行します。
 
-## 関数
-- lambda_function.handler
-
-## Localテスト方法
+### Pytest方法
 - Docker Build
   ``` 
+  cd func/on-off
   docker build -t docker-image:test .
   ```
 - Docker 起動(Test)
   ``` 
   docker run -p 9000:8080 docker-image:test
-
   ``` 

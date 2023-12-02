@@ -1,7 +1,8 @@
 import pytest
 import datetime
 import logging
-import sys, os
+import sys
+import os
 import logging.config
 from logging import getLogger
 
@@ -51,13 +52,14 @@ class Test_EventBridgeCtrl():
     syukujitsu = Shukujitsu()    
     if is_success:
       event_bridge = EventBridgeCtrl(event, syukujitsu)
+      event_bridge._check_event_dict()
+      event_bridge._set_date()
       if False == ('check_date_yyyymmdd' in expect_value):
         expect_value['check_date_yyyymmdd'] = datetime.date.today()
       assert expect_value == event_bridge.event
     else:
       with pytest.raises(Exception) as e:
         event_bridge(event, syukujitsu)
-        print(e)
 
   @pytest.mark.parametrize(
     "testno, event", [
