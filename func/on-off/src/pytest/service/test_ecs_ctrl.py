@@ -1,6 +1,7 @@
 import pytest
 import datetime
 import logging
+import logging.config
 import sys, os
 from logging import getLogger
 
@@ -85,13 +86,16 @@ class Test_EcsCtrl():
     syukujitsu = Shukujitsu()    
     if is_success:
       ecs_ctrl = EcsCtrl(event, syukujitsu)
+      ecs_ctrl._check_event_dict()
+      ecs_ctrl._set_date()
       if False == ('check_date_yyyymmdd' in expect_value):
         expect_value['check_date_yyyymmdd'] = datetime.date.today()
       assert expect_value == ecs_ctrl.event
     else:
       with pytest.raises(Exception) as e:
         ecs_ctrl(event, syukujitsu)
-        print(e)
+        ecs_ctrl._check_event_dict()
+        ecs_ctrl._set_date()
 
   @pytest.mark.parametrize(
     "testno, event", [
