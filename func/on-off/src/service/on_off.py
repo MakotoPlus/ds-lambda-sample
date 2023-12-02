@@ -50,8 +50,9 @@ class OnOff(metaclass=ABCMeta):
     - SWITCH_ON:=平日時は実行メソッド _on()を呼出すが平日以外の場合は何もしないで終了する
     - SWITCH_OFF:=いつでも実行メソッド _off()を呼出す
     '''
-    
+
     # 初期処理
+    logger.info(f"{self.name} 開始")
     self.event = self._check_event_dict()
     self.event = self._set_date()
     # on, off 呼出し
