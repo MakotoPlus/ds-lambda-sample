@@ -25,7 +25,7 @@ test_lambda_function:
     # イメージのビルド&Test実行
     - docker build -f $DIR_ON_OFF/Dockerfile $DIR_ON_OFF/ -t $IMG_ON_OFF    
     - docker run $IMG_ON_OFF
-
+    - echo $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
 # Deploy
 deploy_lambda_function:
   image: node:18
