@@ -25,7 +25,7 @@ test_lambda_function:
     # イメージのビルド&Test実行
     - docker build -f $DIR_ON_OFF/Dockerfile $DIR_ON_OFF/ -t $IMG_ON_OFF    
     - docker run $IMG_ON_OFF
-    - echo $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+
 
 # Deploy Template
 .deploy_template: &deploy_template
@@ -33,31 +33,27 @@ test_lambda_function:
     - npm install -g serverless@3.35.2
     - npm install serverless-offline@13.2.0 --save-dev
     - npm install serverless-dotenv-plugin@6.0.0
+  dependencies:
+    - test_lambda_function
+  image: node:18
+  stage: deploy
   script:
     - echo "OPTION_STAGE=${OPTION_STAGE}"
     - serverless deploy --stage ${OPTION_STAGE}
 
 # Deploy
 deploy_lambda_function:
-  image: node:18
-  stage: deploy
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-  dependencies:
-    - test_lambda_function
-  <<: *deploy_template
   variables:
     OPTION_STAGE: "dev"
+  <<: *deploy_template
 
 # Deploy
 deploy_lambda_function_stg:
-  image: node:18
-  stage: deploy
   rules:
     - if: $CI_COMMIT_REF_NAME == "staging"
-  dependencies:
-    - test_lambda_function
-  <<: *deploy_template
   variables:
     OPTION_STAGE: "stg"
+  <<: *deploy_template
 
