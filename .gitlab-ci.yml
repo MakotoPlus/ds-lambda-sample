@@ -31,7 +31,7 @@ deploy_lambda_function:
   image: node:18
   stage: deploy
   rules:
-    - if: '$CI_MERGE_REQUEST_IID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH'
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   dependencies:
     - test_lambda_function
   before_script:
@@ -46,7 +46,7 @@ deploy_lambda_function_stg:
   image: node:18
   stage: deploy
   rules:
-    - if: '$CI_MERGE_REQUEST_IID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+    - if: $CI_COMMIT_REF_NAME == "staging"
   dependencies:
     - test_lambda_function
   before_script:
