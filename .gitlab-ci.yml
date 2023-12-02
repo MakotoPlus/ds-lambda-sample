@@ -27,12 +27,14 @@ test_lambda_function:
     - docker run $IMG_ON_OFF
     - echo $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
 
+# Deploy Template
 .deploy_template: &deploy_template
   before_script:
     - npm install -g serverless@3.35.2
     - npm install serverless-offline@13.2.0 --save-dev
     - npm install serverless-dotenv-plugin@6.0.0
   script:
+    - echo "OPTION_STAGE=${OPTION_STAGE}"
     - serverless deploy --stage ${OPTION_STAGE}
 
 # Deploy
@@ -47,13 +49,6 @@ deploy_lambda_function:
   variables:
     OPTION_STAGE: "dev"
 
-#  before_script:
-#    - npm install -g serverless@3.35.2
-#    - npm install serverless-offline@13.2.0 --save-dev
-#    - npm install serverless-dotenv-plugin@6.0.0
-#  script:
-#    - serverless deploy --stage dev
-
 # Deploy
 deploy_lambda_function_stg:
   image: node:18
@@ -62,9 +57,7 @@ deploy_lambda_function_stg:
     - if: $CI_COMMIT_REF_NAME == "staging"
   dependencies:
     - test_lambda_function
-  before_script:
-    - npm install -g serverless@3.35.2
-    - npm install serverless-offline@13.2.0 --save-dev
-    - npm install serverless-dotenv-plugin@6.0.0
-  script:
-    - serverless deploy --stage stg
+  <<: *deploy_template
+  variables:
+    OPTION_STAGE: "stg"
+
