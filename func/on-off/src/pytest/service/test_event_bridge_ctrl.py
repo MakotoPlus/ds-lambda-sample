@@ -60,7 +60,6 @@ class Test_EventBridgeCtrl():
     else:
       with pytest.raises(Exception) as e:
         event_bridge(event, syukujitsu)
-        print(e)
 
   @pytest.mark.parametrize(
     "testno, event", [
