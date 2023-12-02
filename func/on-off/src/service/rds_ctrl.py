@@ -15,18 +15,17 @@ class RdsCtrl(OnOff):
     self.shukujitsu = shukujitsu
 
   
-  def _check_event_dict(self, event) -> dict:
-    super(RdsCtrl, self)._check_event_dict(event)
-    result_dict = copy.deepcopy(event)
+  def _check_event_dict(self) -> dict:
+    event = super(RdsCtrl, self)._check_event_dict()
     if not (RdsCtrl.DICT_REGION_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{RdsCtrl.DICT_REGION_KEY}')
     if not (RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY}')
-    if type(result_dict[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]) is str:
-      result_dict[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY] = [result_dict[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]]
+    if type(event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]) is str:
+      event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY] = [event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]]
     elif type(event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]) is not list:
       raise Exception(f'{self.name} event parameter key is type error key:{RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY}')
-    return result_dict
+    return event
 
   
   def _is_running(self, check_date) -> bool:

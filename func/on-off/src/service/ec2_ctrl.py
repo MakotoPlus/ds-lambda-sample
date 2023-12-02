@@ -25,14 +25,14 @@ class Ec2Ctrl(OnOff):
     super().__init__('EC2', event)
     self.shukujitsu = shukujitsu
 
-  def _check_event_dict(self, event) -> dict:
+  def _check_event_dict(self) -> dict:
     '''
     EC2 サービスのタスク定義が想定通りかチェックする
     
     - EC2: {'instance': ['instance name',...], 'stopMode': 'normal' or 'hard'}
     '''
     logger.debug(f'{self.name} check_event_dict')
-    event = super(Ec2Ctrl, self)._check_event_dict(event)
+    event = super(Ec2Ctrl, self)._check_event_dict()
     if not (Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY}')
     ec2_service_values = event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]
