@@ -30,6 +30,8 @@ test_lambda_function:
 deploy_lambda_function:
   image: node:18
   stage: deploy
+  rules:
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "master"
   dependencies:
     - test_lambda_function
   before_script:
@@ -38,13 +40,13 @@ deploy_lambda_function:
     - npm install serverless-dotenv-plugin@6.0.0
   script:
     - serverless deploy --stage dev
-  only:
-    - master
 
 # Deploy
 deploy_lambda_function_stg:
   image: node:18
   stage: deploy
+  rules:
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "staging"
   dependencies:
     - test_lambda_function
   before_script:
@@ -53,5 +55,4 @@ deploy_lambda_function_stg:
     - npm install serverless-dotenv-plugin@6.0.0
   script:
     - serverless deploy --stage stg
-  only:
-    - master
+
