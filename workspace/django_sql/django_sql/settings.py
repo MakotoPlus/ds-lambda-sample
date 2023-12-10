@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
 	# Application labels aren't unique, duplicates: debug_toolbar
 	# というエラーが出る場合は下記をコメントアウトする
-    # 'debug_toolbar',
+    #'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

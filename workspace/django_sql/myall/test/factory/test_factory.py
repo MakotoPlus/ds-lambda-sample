@@ -115,11 +115,24 @@ class LienyPayTraitFactory(factory.django.DjangoModelFactory):
         lineid='123',
     )
 
+class SubCompanyTypeFactory(factory.django.DjangoModelFactory):
+  class Meta:
+    model = models.SubCompanyType
+  type_name = "A"
+  disp_order = 1
 
 class CompanyFactory(factory.django.DjangoModelFactory):
   class Meta:
     model = models.Company
-  name = "company"
+  name = fake.company()
+
+class SubCompanyFactory(factory.django.DjangoModelFactory):
+  class Meta:
+    model = models.SubCompany
+  subName = fake.name()
+  company_id = factory.SubFactory(CompanyFactory)
+  sub_company_type = factory.SubFactory(SubCompanyTypeFactory)
+
 
 class SubCompany2TraitFactory(factory.django.DjangoModelFactory):
   class Meta:
