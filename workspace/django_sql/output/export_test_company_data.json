@@ -1,0 +1,99 @@
+[
+{
+    "model": "myall.subcompanytype",
+    "pk": 1,
+    "fields": {
+        "type_name": "TYPE_A",
+        "disp_order": 1
+    }
+},
+{
+    "model": "myall.subcompanytype",
+    "pk": 2,
+    "fields": {
+        "type_name": "TYPE_B",
+        "disp_order": 2
+    }
+},
+{
+    "model": "myall.subcompanytype",
+    "pk": 3,
+    "fields": {
+        "type_name": "TYPE_C",
+        "disp_order": 3
+    }
+},
+{
+    "model": "myall.company",
+    "pk": 1,
+    "fields": {
+        "name": "Test株式会社004 サブなし"
+    }
+},
+{
+    "model": "myall.company",
+    "pk": 2,
+    "fields": {
+        "name": "Test株式会社003 サブなし"
+    }
+},
+{
+    "model": "myall.company",
+    "pk": 3,
+    "fields": {
+        "name": "Test株式会社001"
+    }
+},
+{
+    "model": "myall.company",
+    "pk": 4,
+    "fields": {
+        "name": "Test株式会社002"
+    }
+},
+{
+    "model": "myall.subcompany",
+    "pk": 1,
+    "fields": {
+        "subName": "サブ名001",
+        "company_id": 3,
+        "sub_company_type": 3
+    }
+},
+{
+    "model": "myall.subcompany",
+    "pk": 2,
+    "fields": {
+        "subName": "サブ名002",
+        "company_id": 3,
+        "sub_company_type": 2
+    }
+},
+{
+    "model": "myall.subcompany",
+    "pk": 3,
+    "fields": {
+        "subName": "サブ名003",
+        "company_id": 3,
+        "sub_company_type": 1
+    }
+},
+{
+    "model": "myall.subcompany",
+    "pk": 4,
+    "fields": {
+        "subName": "002サブ名001",
+        "company_id": 4,
+        "sub_company_type": 2
+    }
+},
+{
+    "model": "myall.subcompany",
+    "pk": 5,
+    "fields": {
+        "subName": "002サブ名002",
+        "company_id": 4,
+        "sub_company_type": 3
+    }
+}
+]

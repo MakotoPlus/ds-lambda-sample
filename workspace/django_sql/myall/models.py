@@ -105,18 +105,25 @@ class Publication(models.Model):
     
 class Author(models.Model):
     headline = models.CharField(max_length=100)
-    publications = models.ManyToManyField(Publication)
-    
+    publications = models.ManyToManyField(Publication)    
+
+class SubCompanyType(models.Model):
+    id = models.AutoField(primary_key=True)
+    type_name = models.CharField(max_length=40)
+    disp_order = models.IntegerField(verbose_name="表示順序")
+    class Meta:
+        db_table = 'sub_company_type'
+        verbose_name = 'サブ店舗タイプ'
 
 class Company(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)    
 
 class SubCompany(models.Model):
     id = models.AutoField(primary_key=True)
     subName =models.CharField(max_length=100)
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
-
+    sub_company_type = models.ForeignKey(SubCompanyType, null=True, on_delete=models.CASCADE)
 
 
 class Person(models.Model):
