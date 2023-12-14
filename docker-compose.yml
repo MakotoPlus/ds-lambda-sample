@@ -1,5 +1,8 @@
 version: '3'
-
+#
+# DjangoとNginxを別々のコンテナで起動確認する定義なのだが
+# またNginx --> Django の通信が出来なくなった。
+# 理由は不明だけど用途もなさそうだから放置
 services:
   django_sql:
     # os起動時(Docker起動時)にコンテナを再起動さる場合
