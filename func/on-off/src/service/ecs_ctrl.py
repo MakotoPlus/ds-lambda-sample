@@ -79,7 +79,7 @@ class EcsCtrl(OnOff):
            service=ecs_service_value[self.DICT_SERVICE_KEY],
            desiredCount = 0
         )
-      logger.info(f'{self.name}停止処理を実行しました。 '  \
+      logger.debug(f'{self.name}停止処理を実行しました。 '  \
         f'cluster={ecs_service_value[self.DICT_CLUSTER_KEY]} ' \
         f'service={ecs_service_value[self.DICT_SERVICE_KEY]}')
 
