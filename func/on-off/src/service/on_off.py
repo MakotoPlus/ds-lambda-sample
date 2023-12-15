@@ -51,7 +51,6 @@ class OnOff(metaclass=ABCMeta):
     '''
 
     # 初期処理
-    logger.info(f"{self.name} 開始")
     self.event = self._check_event_dict()
     self.event = self._set_date()
     # on, off 呼出し

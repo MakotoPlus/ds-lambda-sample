@@ -13,10 +13,10 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = getLogger(__name__)
 
 def handler(event, context):
-  logger.info('起動/停止Lambda Start')
+  logger.info('On-Off Lambda Start')
   for ctrl_obj in get_ctrl_objs(event, Shukujitsu()):
     ctrl_obj.run()      
-  logger.info('起動/停止Lambda 終了')
+  logger.info('On-Off Lambda End')
   return {'result': 'success'}
 
 
