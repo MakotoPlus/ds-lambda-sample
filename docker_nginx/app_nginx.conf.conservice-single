@@ -6,10 +6,10 @@ upstream django {
     # AWS
     # コンテナ間通信 Connect Server
     #server django_sql_service:8000;
-    server django-img-8000-tcp:8000;
+    #server django-img-8000-tcp:8000;
     #server django-img-80-tcp:80;
     # 同一コンテナ実施
-    #server localhost:8000;
+    server localhost:8000;
 }
 server {
     listen      80;
@@ -26,17 +26,17 @@ server {
     #location / {
     #    include     /etc/nginx/uwsgi_params;
     #}
-    location / {
-        proxy_pass http://django;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
     #location / {
-    #    uwsgi_pass  django;
-    #    include     /etc/nginx/uwsgi_params;
+    #    proxy_pass http://django;
+    #    proxy_http_version 1.1;
+    #    proxy_set_header Host $host;
+    #    proxy_set_header X-Real-IP $remote_addr;
+    #    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     #}
+    location / {
+        uwsgi_pass  django;
+        include     /etc/nginx/uwsgi_params;
+    }
 }
 server_tokens off;
 
