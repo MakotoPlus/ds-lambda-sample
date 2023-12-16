@@ -3,44 +3,44 @@
     "model": "myall.mtag",
     "pk": 1,
     "fields": {
-        "name": "\u4f0a\u85e4 \u660e\u7f8e(6)"
+        "name": "\u7530\u4e2d \u967d\u4e00(6)"
     }
 },
 {
     "model": "myall.mtag",
     "pk": 2,
     "fields": {
-        "name": "\u658e\u85e4 \u52a0\u5948(7)"
+        "name": "\u52a0\u85e4 \u4eae\u4ecb(7)"
     }
 },
 {
     "model": "myall.mtag",
     "pk": 3,
     "fields": {
-        "name": "\u6728\u6751 \u967d\u4e00(8)"
+        "name": "\u4e2d\u5ddd \u548c\u4e5f(8)"
     }
 },
 {
     "model": "myall.mtag",
     "pk": 4,
     "fields": {
-        "name": "\u4f50\u85e4 \u548c\u4e5f(9)"
+        "name": "\u4f50\u85e4 \u9999\u7e54(9)"
     }
 },
 {
     "model": "myall.mtag",
     "pk": 5,
     "fields": {
-        "name": "\u5f8c\u85e4 \u77e5\u5b9f(10)"
+        "name": "\u6e05\u6c34 \u7f8e\u52a0\u5b50(10)"
     }
 },
 {
     "model": "myall.mblog",
     "pk": 1,
     "fields": {
-        "title": "\u4f50\u3005\u6728 \u9999\u7e54",
-        "content": "content_\u4f50\u3005\u6728 \u9999\u7e54",
-        "good_point": 5370294780,
+        "title": "\u5409\u7530 \u967d\u4e00",
+        "content": "content_\u5409\u7530 \u967d\u4e00",
+        "good_point": 6336588412,
         "tags": [
             1,
             2,

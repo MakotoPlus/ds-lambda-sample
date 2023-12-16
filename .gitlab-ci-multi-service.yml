@@ -1,5 +1,5 @@
 #
-# 2023.12.16 同一サービス、同一コンテナ内で、Django, Nginxを動作させるバージョン
+# 2023.12.16 別々のサービスでコンテナ間通信を行うバージョン。但し動作しなくなったやつ 
 #
 image: docker:20.10
 services:
@@ -40,7 +40,7 @@ build:
     - pip install awscli
   script:
     # イメージのビルド
-    - docker-compose -f conservice-single.yml build
+    - docker-compose -f conservice.yml build
     - docker save $DOCKER_DJANGO_IMG > $DOCKER_DJANGO_IMG.tar
     - docker save $DOCKER_NGINX_IMG > $DOCKER_NGINX_IMG.tar
   artifacts:
@@ -61,7 +61,7 @@ test:
     - apk add --update py-pip
   script:
     #- docker load -i ${DOCKER_DJANGO_IMG}.tar
-    - docker-compose -f conservice-single.yml run django_sql_service pytest
+    - docker-compose -f conservice.yml run django_sql_service pytest
   #artifacts:
     #untracked: true
   #  paths:
@@ -90,19 +90,19 @@ deploy_nginx:
     - docker tag $DOCKER_NGINX_IMG:latest $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     - docker push $ECR_REPOSITORY_NGINX:${CI_COMMIT_SHORT_SHA}
     # NGINX TASK 定義更新
-    #- >
-    # aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
-    # jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_NGINX}
-    ## NGINX 加工
-    #- >
-    #  sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_NGINX}.*,|\"image\": \"${ECR_REPOSITORY_NGINX}:${CI_COMMIT_SHORT_SHA}\",|g"
-    #  ${JSON_FILE_NGINX}
-    ## 定義更新PUSH
-    #- aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE_NGINX}
-    ## NGINXサービス更新
-    #- >
-    #  aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
-    #  --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
+    - >
+     aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --region ${AWS_DEFAULT_REGION} |
+     jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_NGINX}
+    # NGINX 加工
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_NGINX}.*,|\"image\": \"${ECR_REPOSITORY_NGINX}:${CI_COMMIT_SHORT_SHA}\",|g"
+      ${JSON_FILE_NGINX}
+    # 定義更新PUSH
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_NGINX} --cli-input-json file://${JSON_FILE_NGINX}
+    # NGINXサービス更新
+    - >
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_NGINX_SERVICE}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_NGINX}
   only:
     - master
   #when: manual
@@ -125,19 +125,19 @@ deploy_django:
     - docker tag $DOCKER_DJANGO_IMG:latest $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
     - docker push $ECR_REPOSITORY_DJANGO:${CI_COMMIT_SHORT_SHA}
     # DJANGO TASK 定義更新
-    #- >
-    # aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
-    # jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_DJANGO}
-    ## DJANGO 加工
-    #- >
-    #  sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
-    #  ${JSON_FILE_DJANGO}
-    ## 定義更新PUSH
-    #- aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://${JSON_FILE_DJANGO}
-    ## DJANGOサービス更新
-    #- >
-    #  aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
-    #  --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
+    - >
+     aws ecs describe-task-definition --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --region ${AWS_DEFAULT_REGION} |
+     jq ".taskDefinition | del (.registeredBy, .registeredAt, .taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities)" > ${JSON_FILE_DJANGO}
+    # DJANGO 加工
+    - >
+      sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_DJANGO}.*,|\"image\": \"${ECR_REPOSITORY_DJANGO}:${CI_COMMIT_SHORT_SHA}\",|g"
+      ${JSON_FILE_DJANGO}
+    # 定義更新PUSH
+    - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION_DJANGO} --cli-input-json file://${JSON_FILE_DJANGO}
+    # DJANGOサービス更新
+    - >
+      aws ecs update-service --cluster ${CI_AWS_ECS_CLUSTER} --service ${CI_AWS_ECS_DJANGO_SERVICE}
+      --task-definition ${CI_AWS_ECS_TASK_DEFINITION_DJANGO}
   only:
     - master
   #when: manual

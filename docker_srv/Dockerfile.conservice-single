@@ -1,0 +1,46 @@
+FROM python:3.8
+USER root
+
+ENV HOST_COPY_DIR=.
+ENV DOCKER_COPY_DIR=/project
+ENV DOCKER_DIR=./docker_srv
+#ENV SOURCE_DIR=./workspace
+ENV WORK_DIR=/project/workspace/django_sql
+ENV SSH=./docker_srv/.ssh
+
+RUN apt-get update && \
+    apt-get -y install locales && \
+    apt-get install -y vim less && \
+    localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+#RUN apt-get install -y vim less
+
+ENV LANG ja_JP.UTF-8
+ENV LANGUAGE ja_JP:ja
+ENV LC_ALL ja_JP.UTF-8
+ENV TZ JST-9
+ENV TERM xterm
+
+
+# コンテナ側へコピー
+COPY $DOCKER_DIR/requirements.txt requirements.txt
+# python ライブラリインストール
+RUN pip install -r ./requirements.txt
+
+#COPY $SSH /root/.ssh
+#RUN chmod 0600 /root/.ssh/*
+
+COPY $HOST_COPY_DIR $DOCKER_COPY_DIR
+
+WORKDIR $WORK_DIR
+
+RUN mkdir -p $WORK_DIR/log
+RUN python manage.py migrate
+# Nginxと通信用ディレクトリいる？
+#RUN python manage.py collectstatic
+EXPOSE 8000
+
+# Django起動 直接の場合はhttp, nginx経由の場合はsocketを使用する, 同一コンテナ内の場合は sh を利用する
+# CMD ["uwsgi", "--http", "0.0.0.0:8000", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
+#CMD ["uwsgi", "--socket", "0.0.0.0:8000", "--chdir", "/project/workspace/django_sql", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
+CMD ["sh", "-c", "uwsgi --socket :8000 --buffer-size 327670 --wsgi-file django_sql/wsgi.py"]
+
