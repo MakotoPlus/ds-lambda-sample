@@ -58,6 +58,7 @@ class TestPersonM2M():
     logger.debug(f'person pk={person.pk} name={person.name}')
     # personからだからリレーションを使ってall()で取得
     for index, membership_obj in enumerate(person.membership_set.all()):
-      logger.debug(f'[{person.pk}]-[{membership_obj.group.pk}] membership_obj.group.name={membership_obj.group.name}')
-      logger.debug(f'[{person.pk}]-[{membership_obj.group.pk}] membership_obj.date_joined={membership_obj.date_joined}')
-      logger.debug(f'[{person.pk}]-[{membership_obj.group.pk}] membership_obj.invite_reason={membership_obj.invite_reason}')
+      logger.debug(f'[{person.pk}]-[{membership_obj.group.pk}]' \
+                  f' membership_obj.group.name=[{membership_obj.group.name}]' \
+                  f' date_joined=[{membership_obj.date_joined}]' \
+                  f' invite_reason=[{membership_obj.invite_reason}]')

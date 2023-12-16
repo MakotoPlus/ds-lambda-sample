@@ -179,7 +179,7 @@ LOGGING = {
 '''
 LOGER_LEVEL = 'DEBUG'
 DJANGO_LOG_LEVEL = 'INFO'
-DB_LOG_LEVEL = 'INFO'
+DB_LOG_LEVEL = 'DEBUG'
 LOG_DIR = os.path.join(BASE_DIR, "log/")
 LOGGING = {
     'version': 1,
@@ -209,11 +209,17 @@ LOGGING = {
     # ロガーの設定
     'loggers': {
         # 実行SQL
-        'django.db': {
+        'django.db.backend': {
             'handlers': ['console'],
-            'level': DB_LOG_LEVEL,
+            'level': 'DEBUG',
             'propagate': True,
         },
+        # 実行SQL
+        #'django.db': {
+        #    'handlers': ['console'],
+        #    'level': DB_LOG_LEVEL,
+        #    'propagate': True,
+        #},
         # factoryが出力するログ全般を拾うロガー
         'factory': {
             'handlers': ['console'],
