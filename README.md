@@ -13,3 +13,12 @@
 1. PositiveIntegerField, GenericRelationの構成サンプルプログラム
    参考サイト：https://docs.djangoproject.com/ja/4.2/ref/contrib/contenttypes/
    参考サイト：https://blog.narito.ninja/detail/34
+
+### CICDについて
+- Docker
+  - conservice.yml
+    - Django, Nginxを別々のサービスとして起動させて通信させるバージョン
+      - 動かなくなっている。原因はnginxの.confだと思うが修正方法が分からず
+      - Django, Nginxを別々のサービスで動かす需要が無さそうなので放置
+  - conservice-single.yml
+    - Django, Nginxを同一サービスで同一タスク定義内で起動させて通信させるバージョン
