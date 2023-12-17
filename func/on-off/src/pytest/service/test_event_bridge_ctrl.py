@@ -33,12 +33,14 @@ class Test_EventBridgeCtrl():
         "001",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: "instance"
         }, 
         (
           True, {
             OnOff.DICT_CHECK_DATE_YYYYMMDD: datetime.date(2023,10,6),
+            OnOff.DICT_REGION_KEY: "ap-northeast-1",
             OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
             EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: ["instance"]
           }
@@ -67,6 +69,7 @@ class Test_EventBridgeCtrl():
         "001",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: "instance"
         }
@@ -75,6 +78,7 @@ class Test_EventBridgeCtrl():
         "002",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: "instance"
         }
@@ -83,6 +87,7 @@ class Test_EventBridgeCtrl():
         "003",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: ["instanceA", "instanceB"]
         }
@@ -91,6 +96,7 @@ class Test_EventBridgeCtrl():
         "004",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY: []
         }

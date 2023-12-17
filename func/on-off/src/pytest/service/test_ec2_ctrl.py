@@ -31,6 +31,7 @@ class Test_Ec2Ctrl():
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: "instance-name",
             Ec2Ctrl.DICT_STOP_MODE_KEY: StopMode.HARD.value
@@ -39,6 +40,7 @@ class Test_Ec2Ctrl():
         (
           True, {
             OnOff.DICT_CHECK_DATE_YYYYMMDD: datetime.date(2023,10,6),
+            OnOff.DICT_REGION_KEY: "ap-northeast-1",
             OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
             Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
               Ec2Ctrl.DICT_INSTANCE_KEY: ["instance-name"],
@@ -51,6 +53,7 @@ class Test_Ec2Ctrl():
         "002",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: "instance-name",
           }
@@ -58,6 +61,7 @@ class Test_Ec2Ctrl():
         (
           True, {
             OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+            OnOff.DICT_REGION_KEY: "ap-northeast-1",
             Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
               Ec2Ctrl.DICT_INSTANCE_KEY: ["instance-name"],
               Ec2Ctrl.DICT_STOP_MODE_KEY: StopMode.NORMAL.value
@@ -69,11 +73,13 @@ class Test_Ec2Ctrl():
         "003",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{}
         },
         (
           True, {
             OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+            OnOff.DICT_REGION_KEY: "ap-northeast-1",
             Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{}
           }
         )
@@ -82,6 +88,7 @@ class Test_Ec2Ctrl():
         "004",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
         },
         (
           False, {
@@ -92,6 +99,7 @@ class Test_Ec2Ctrl():
         "005",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
           }
         },
@@ -129,6 +137,7 @@ class Test_Ec2Ctrl():
         "001",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: "instance-name-001",
@@ -140,6 +149,7 @@ class Test_Ec2Ctrl():
         "002",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: ["instance-name-001", "instance-name-002"]
@@ -165,6 +175,7 @@ class Test_Ec2Ctrl():
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: "instance-name-001",
             Ec2Ctrl.DICT_STOP_MODE_KEY: StopMode.HARD.value
@@ -176,6 +187,7 @@ class Test_Ec2Ctrl():
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: ["instance-name-001",
                                         "instance-name-002",
@@ -188,6 +200,7 @@ class Test_Ec2Ctrl():
         "003",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: ["instance-name-X01",
@@ -256,6 +269,7 @@ class Test_Ec2Ctrl():
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
             Ec2Ctrl.DICT_INSTANCE_KEY: ["instance-name-X01",
                                         ]
@@ -303,6 +317,7 @@ class Test_Ec2Ctrl():
         "001",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
           }
@@ -312,6 +327,7 @@ class Test_Ec2Ctrl():
         "002",
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
           Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY:{
           }

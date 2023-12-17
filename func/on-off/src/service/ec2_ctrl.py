@@ -75,7 +75,7 @@ class Ec2Ctrl(OnOff):
     if not Ec2Ctrl.DICT_INSTANCE_KEY in self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]:
       return False
 
-    client = boto3.client('ec2')
+    client = boto3.client('ec2', region_name=self.event[OnOff.DICT_REGION_KEY])
     ec2_instances = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
     ret = client.start_instances(InstanceIds=ec2_instances)
     logger.debug(ret)
@@ -88,7 +88,7 @@ class Ec2Ctrl(OnOff):
     if not Ec2Ctrl.DICT_INSTANCE_KEY in self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]:
       return False
 
-    client = boto3.client('ec2')    
+    client = boto3.client('ec2', region_name=self.event[OnOff.DICT_REGION_KEY])
     #
     # Instance Status 取得
     ec2_instance_names = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]

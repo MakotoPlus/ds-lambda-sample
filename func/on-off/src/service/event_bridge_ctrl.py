@@ -8,6 +8,7 @@ logger = logging.getLogger()
 
 class EventBridgeCtrl(OnOff):
   DICT_EVENT_BRIDGE_KEY = 'EventBridge'
+
   '''
   EventBridgeサービスを有効・無効設定するクラス
   '''
@@ -41,7 +42,8 @@ class EventBridgeCtrl(OnOff):
     '''
     EventBridge Start
     '''
-    client = boto3.client('events')
+    client = boto3.client('events', region_name=self.event[OnOff.DICT_REGION_KEY])
+
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
       ret = client.enable_rule(Name=event_name)
       logger.debug(ret)
@@ -50,7 +52,7 @@ class EventBridgeCtrl(OnOff):
     '''
     EventBridge Stop
     '''
-    client = boto3.client('events')
+    client = boto3.client('events', region_name=self.event[OnOff.DICT_REGION_KEY])
     for event_name in self.event[EventBridgeCtrl.DICT_EVENT_BRIDGE_KEY]:
       logger.debug(f'{self.name} event_name={event_name}')
       ret = client.disable_rule(Name=event_name)

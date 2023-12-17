@@ -7,18 +7,14 @@ logger = logging.getLogger()
 
 class RdsCtrl(OnOff):
   DICT_DBINSTANCE_IDENTIFIER_KEY = 'DBInstanceIdentifier'
-  DICT_REGION_KEY = 'region'
 
 
   def __init__(self, event, shukujitsu: Shukujitsu):
     super().__init__('RDS', event)
     self.shukujitsu = shukujitsu
-
   
   def _check_event_dict(self) -> dict:
     event = super(RdsCtrl, self)._check_event_dict()
-    if not (RdsCtrl.DICT_REGION_KEY in event ):
-      raise Exception(f'{self.name} event parameter key is not key:{RdsCtrl.DICT_REGION_KEY}')
     if not (RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY}')
     if type(event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]) is str:
@@ -44,7 +40,7 @@ class RdsCtrl(OnOff):
     '''
     DB Instans Start
     '''
-    rds = boto3.client('rds', region_name=self.event[RdsCtrl.DICT_REGION_KEY])
+    rds = boto3.client('rds', region_name=self.event[OnOff.DICT_REGION_KEY])
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
       # 起動前に状態確認して既に起動しているのなら何もしない
@@ -62,7 +58,7 @@ class RdsCtrl(OnOff):
     '''
     DB Instans Stop
     '''
-    rds = boto3.client('rds', region_name=self.event[RdsCtrl.DICT_REGION_KEY])
+    rds = boto3.client('rds', region_name=self.event[OnOff.DICT_REGION_KEY])
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
       # 起動前に状態確認して既に停止しているのなら何もしない

@@ -58,7 +58,7 @@
 
  { 
    'switch': 'on' or 'off',               # 起動 or 停止
-   'region': ['ap-northeast-1'],          # 停止したいリージョン
+   'region': 'ap-northeast-1',          # 起動 or 停止したいリージョン
    'EcsService': [{
       'cluster': 'ecs cluster name'       # ECSクラスター名
       'service': 'ecs servicename'        # ECSサービス名

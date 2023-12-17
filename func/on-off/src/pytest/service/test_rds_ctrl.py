@@ -103,6 +103,17 @@ class Test_RdsCtrl():
           False, {}
         )
       )
+      ,(
+        "007",
+        {
+          "switch": "on",
+            "DBInstanceIdentifier": ["instance-1", "instance-2"]
+        }, 
+        (
+          False, {
+          }
+        )
+      )
     ]
   )
   def test_check_event_dict(self, testno, event, expect):

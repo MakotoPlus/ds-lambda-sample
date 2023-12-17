@@ -22,6 +22,7 @@ class Test_EcsCtrl():
         {
           OnOff.DICT_CHECK_DATE_YYYYMMDD: "20231006",
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[{
             EcsCtrl.DICT_CLUSTER_KEY: "cluster",
             EcsCtrl.DICT_SERVICE_KEY: "service",
@@ -32,6 +33,7 @@ class Test_EcsCtrl():
           True, {
             OnOff.DICT_CHECK_DATE_YYYYMMDD: datetime.date(2023,10,6),
             OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+            OnOff.DICT_REGION_KEY: "ap-northeast-1",
             EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[{
               EcsCtrl.DICT_CLUSTER_KEY: "cluster",
               EcsCtrl.DICT_SERVICE_KEY: "service",
@@ -44,6 +46,7 @@ class Test_EcsCtrl():
         "002",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[
             {
               EcsCtrl.DICT_CLUSTER_KEY: "cluster01",
@@ -60,6 +63,7 @@ class Test_EcsCtrl():
         (
           True, {
             OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+            OnOff.DICT_REGION_KEY: "ap-northeast-1",
             EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[
               {
                 EcsCtrl.DICT_CLUSTER_KEY: "cluster01",
@@ -103,6 +107,7 @@ class Test_EcsCtrl():
         "001",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[
             {
               EcsCtrl.DICT_CLUSTER_KEY: "cluster01",
@@ -121,6 +126,7 @@ class Test_EcsCtrl():
         "002",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[
             {
               EcsCtrl.DICT_CLUSTER_KEY: "cluster01",
@@ -139,6 +145,7 @@ class Test_EcsCtrl():
         "003",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[]
         }
       )
@@ -163,6 +170,7 @@ class Test_EcsCtrl():
         "001",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[
             {
               EcsCtrl.DICT_CLUSTER_KEY: "cluster01",
@@ -176,6 +184,7 @@ class Test_EcsCtrl():
         "002",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[
             {
               EcsCtrl.DICT_CLUSTER_KEY: "cluster02",
@@ -194,6 +203,7 @@ class Test_EcsCtrl():
         "003",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_ON,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[]
         }
       )
@@ -201,6 +211,7 @@ class Test_EcsCtrl():
         "004",
         {
           OnOff.DICT_SWITCH_KEY: OnOff.SWITCH_OFF,
+          OnOff.DICT_REGION_KEY: "ap-northeast-1",
           EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY:[]
         }
       )

@@ -25,10 +25,10 @@ class EcsCtrl(OnOff):
     
     - EcsService: {['cluster': 'cluster name', 'service':'service name', 'desiredCount': N]}
     '''
-    self.event = super(EcsCtrl, self)._check_event_dict()
-    if not (EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY in self.event ):
+    event = super(EcsCtrl, self)._check_event_dict()
+    if not (EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY}')
-    ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
+    ecs_service_values = event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:
       if not (EcsCtrl.DICT_CLUSTER_KEY in ecs_service_value):
         raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_CLUSTER_KEY}')
@@ -57,7 +57,7 @@ class EcsCtrl(OnOff):
     '''
     ECS Service Start
     '''
-    client = boto3.client('ecs')
+    client = boto3.client('ecs', region_name=self.event[OnOff.DICT_REGION_KEY])
     ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:      
       ret = client.update_service(
@@ -71,7 +71,7 @@ class EcsCtrl(OnOff):
     '''
     ECS Service Stop
     '''
-    client = boto3.client('ecs')
+    client = boto3.client('ecs', region_name=self.event[OnOff.DICT_REGION_KEY])
     ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:      
       ret = client.update_service(
