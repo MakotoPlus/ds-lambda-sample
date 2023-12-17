@@ -23,6 +23,7 @@ variables:
   CI_AWS_ECS_TASK_DEFINITION: django_in_nginx
   #CI_AWS_ECS_TASK_DEFINITION_DJANGO: django_sql_conservice
   #CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_conservice
+  JSON_FILE: task.out.json
   JSON_FILE_DJANGO: task.django.out.json
   JSON_FILE_NGINX: task.nginx.out.json
   ECR_REPOSITORY_NGINX: nginx_conservice
@@ -64,7 +65,7 @@ test:
     #- docker load -i ${DOCKER_DJANGO_IMG}.tar
     - docker-compose -f conservice-single.yml run django_sql_service pytest
   #artifacts:
-    #untracked: true
+  #untracked: true
   #  paths:
   #    - $DOCKER_DJANGO_IMG.tar
   #    - $DOCKER_NGINX_IMG.tar
