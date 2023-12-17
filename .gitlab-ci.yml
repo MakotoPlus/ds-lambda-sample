@@ -14,19 +14,17 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DJANGO_IMG: django_sql_img
-  CI_AWS_ECS_CLUSTER: aws-infra-dev-django
-  CI_AWS_ECS_DJANGO_SERVICE: django
-  CI_AWS_ECS_NGINX_SERVICE: nginx_conservice
-  ECR_REPOSITORY_DJANGO: django_sql_conservice
-  
   DOCKER_NGINX_IMG: nginx_img
-  CI_AWS_ECS_TASK_DEFINITION: django_in_nginx
-  #CI_AWS_ECS_TASK_DEFINITION_DJANGO: django_sql_conservice
-  #CI_AWS_ECS_TASK_DEFINITION_NGINX: nginx_conservice
-  JSON_FILE: task.out.json
-  JSON_FILE_DJANGO: task.django.out.json
-  JSON_FILE_NGINX: task.nginx.out.json
+
+  CI_AWS_ECS_CLUSTER: django_sql_service_connect
+  CI_AWS_ECS_SERVICE: django_in_nginx_service
+
+  ECR_REPOSITORY_DJANGO: django_sql_conservice
   ECR_REPOSITORY_NGINX: nginx_conservice
+  
+  CI_AWS_ECS_TASK_DEFINITION: django_in_nginx
+  JSON_FILE: task.out.json
+
 stages:
   - test
   - build
