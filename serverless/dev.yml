@@ -3,7 +3,6 @@ LOG_LEVEL: 'DEBUG'
 
 OFF-Rate-01: 'cron(0 15 * * ? *)'
 ON-Rate-01: 'cron(45 14 * * ? *)'
-
 DBInstanceIdentifier-01:
   - mysql-db
   - postgres-db

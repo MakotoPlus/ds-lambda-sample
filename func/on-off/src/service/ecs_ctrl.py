@@ -25,10 +25,10 @@ class EcsCtrl(OnOff):
     
     - EcsService: {['cluster': 'cluster name', 'service':'service name', 'desiredCount': N]}
     '''
-    event = super(EcsCtrl, self)._check_event_dict()
-    if not (EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY in event ):
+    self.event = super(EcsCtrl, self)._check_event_dict()
+    if not (EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY in self.event ):
       raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY}')
-    ecs_service_values = event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
+    ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:
       if not (EcsCtrl.DICT_CLUSTER_KEY in ecs_service_value):
         raise Exception(f'{self.name} event parameter key is not key:{EcsCtrl.DICT_CLUSTER_KEY}')
