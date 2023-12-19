@@ -1,0 +1,10 @@
+[
+	{
+		"name": "test",
+		"value": "testValue"
+	},
+	{
+		"name": "test2",
+		"value": "testValue2"
+	}
+]

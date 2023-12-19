@@ -41,6 +41,8 @@ RUN python manage.py migrate
 #RUN python manage.py collectstatic
 #EXPOSE 8000
 
+# GIT 設定
+RUN git config --global --add safe.directory /project
 # Django起動 直接の場合はhttp, nginx経由の場合はsocketを使用する
 #CMD ["uwsgi", "--http", "0.0.0.0:8000", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
 CMD ["uwsgi", "--socket", "0.0.0.0:8000", "--chdir", "/project/workspace/django_sql", "--buffer-size", "327670", "--wsgi-file", "django_sql/wsgi.py"]
