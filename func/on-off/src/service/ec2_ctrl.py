@@ -46,15 +46,15 @@ class Ec2Ctrl(OnOff):
 
     if not Ec2Ctrl.DICT_STOP_MODE_KEY in ec2_service_values:
       ec2_service_values[Ec2Ctrl.DICT_STOP_MODE_KEY] = StopMode.NORMAL.value
-      logger.info(f"{self.name} STOP_MODE Nothing")
+      logger.debug(f"{self.name} STOP_MODE Nothing")
       return event
 
     if ec2_service_values[Ec2Ctrl.DICT_STOP_MODE_KEY] != StopMode.HARD.value:
       ec2_service_values[Ec2Ctrl.DICT_STOP_MODE_KEY] = StopMode.NORMAL.value
-      logger.info(f"{self.name} STOP_MODE NOT HARD")
+      logger.debug(f"{self.name} STOP_MODE NOT HARD")
       return event
       
-    logger.info(f"{self.name} STOP_MODE HARD")
+    logger.debug(f"{self.name} STOP_MODE HARD")
     return event
 
   def _is_running(self, check_date) -> bool:
@@ -75,7 +75,7 @@ class Ec2Ctrl(OnOff):
     if not Ec2Ctrl.DICT_INSTANCE_KEY in self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]:
       return False
 
-    client = boto3.client('ec2')
+    client = boto3.client('ec2', region_name=self.event[OnOff.DICT_REGION_KEY])
     ec2_instances = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
     ret = client.start_instances(InstanceIds=ec2_instances)
     logger.debug(ret)
@@ -88,7 +88,7 @@ class Ec2Ctrl(OnOff):
     if not Ec2Ctrl.DICT_INSTANCE_KEY in self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY]:
       return False
 
-    client = boto3.client('ec2')    
+    client = boto3.client('ec2', region_name=self.event[OnOff.DICT_REGION_KEY])
     #
     # Instance Status 取得
     ec2_instance_names = self.event[Ec2Ctrl.DICT_EVENT_EC2_SERVICE_KEY][Ec2Ctrl.DICT_INSTANCE_KEY]
@@ -102,7 +102,7 @@ class Ec2Ctrl(OnOff):
             f'{self.name} InstanceName=[{ec2_instance_name}] status=[{ecs_status["InstanceState"]["Name"]}]'
           )
           if ecs_status["InstanceState"]["Code"] != Ec2Ctrl.ECS_RUNNING:
-            logger.info(
+            logger.warning(
               f'{self.name} instances=[{ec2_instance_name}]は起動中ではありませんでした。'  \
               f'停止処理をスキップします status={ecs_status["InstanceState"]["Code"]}'
             )
@@ -118,7 +118,7 @@ class Ec2Ctrl(OnOff):
           response = client.stop_instances(
             InstanceIds=[ec2_instance_name]
           )
-          logger.info(
+          logger.debug(
             f'{self.name} instances=[{ec2_instance_name}]の停止処理を実行しました。'
           )
           logger.debug(
@@ -126,4 +126,4 @@ class Ec2Ctrl(OnOff):
           )
           break
       else:
-        logger.info(f'{self.name} no_instances_status=[{ec2_instance_name}]')
+        logger.warning(f'{self.name} no_instances_status=[{ec2_instance_name}]')

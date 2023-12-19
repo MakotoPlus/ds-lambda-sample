@@ -7,18 +7,14 @@ logger = logging.getLogger()
 
 class RdsCtrl(OnOff):
   DICT_DBINSTANCE_IDENTIFIER_KEY = 'DBInstanceIdentifier'
-  DICT_REGION_KEY = 'region'
 
 
   def __init__(self, event, shukujitsu: Shukujitsu):
     super().__init__('RDS', event)
     self.shukujitsu = shukujitsu
-
   
   def _check_event_dict(self) -> dict:
     event = super(RdsCtrl, self)._check_event_dict()
-    if not (RdsCtrl.DICT_REGION_KEY in event ):
-      raise Exception(f'{self.name} event parameter key is not key:{RdsCtrl.DICT_REGION_KEY}')
     if not (RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY in event ):
       raise Exception(f'{self.name} event parameter key is not key:{RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY}')
     if type(event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]) is str:
@@ -44,7 +40,7 @@ class RdsCtrl(OnOff):
     '''
     DB Instans Start
     '''
-    rds = boto3.client('rds', region_name=self.event[RdsCtrl.DICT_REGION_KEY])
+    rds = boto3.client('rds', region_name=self.event[OnOff.DICT_REGION_KEY])
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
       # 起動前に状態確認して既に起動しているのなら何もしない
@@ -53,7 +49,7 @@ class RdsCtrl(OnOff):
         logger.warning(f"{self.name} 既に起動しています instance:[{instance_name}]")
       elif "stopped" == status:
         ret = rds.start_db_instance(DBInstanceIdentifier=instance_name)
-        logger.info(f'{self.name} Start Success:[{instance_name}]')
+        logger.debug(f'{self.name} Start Success:[{instance_name}]')
         logger.debug(ret)
       else:
         logger.warning(f'{self.name} ステータス更新中のため処理スキップします :[{instance_name}]')    
@@ -62,7 +58,7 @@ class RdsCtrl(OnOff):
     '''
     DB Instans Stop
     '''
-    rds = boto3.client('rds', region_name=self.event[RdsCtrl.DICT_REGION_KEY])
+    rds = boto3.client('rds', region_name=self.event[OnOff.DICT_REGION_KEY])
     for instance_name in self.event[RdsCtrl.DICT_DBINSTANCE_IDENTIFIER_KEY]:
       #
       # 起動前に状態確認して既に停止しているのなら何もしない
@@ -71,7 +67,7 @@ class RdsCtrl(OnOff):
         logger.warning(f"{self.name} 既に一時的に停止しています instance:[{instance_name}]")
       elif "available" == status:
         ret = rds.stop_db_instance(DBInstanceIdentifier=instance_name)
-        logger.info(f'{self.name} Stop Success:[{instance_name}]')
+        logger.debug(f'{self.name} Stop Success:[{instance_name}]')
         logger.debug(ret)
       else:
         logger.warning(f'{self.name} ステータス更新中のため処理スキップします :[{instance_name}]')    

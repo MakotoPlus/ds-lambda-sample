@@ -8,7 +8,9 @@ logger = logging.getLogger()
 
 class OnOff(metaclass=ABCMeta):
   DICT_SWITCH_KEY = 'switch'
+  DICT_REGION_KEY = 'region'
   DICT_CHECK_DATE_YYYYMMDD = 'check_date_yyyymmdd'
+
   SWITCH_ON = 'on'
   SWITCH_OFF = 'off'
 
@@ -27,6 +29,10 @@ class OnOff(metaclass=ABCMeta):
     switch_value = self.event[OnOff.DICT_SWITCH_KEY]
     if OnOff.SWITCH_ON != switch_value and OnOff.SWITCH_OFF != switch_value:
       raise Exception(f'{self.name} event parameter value error {switch_value}')
+    
+    if not (OnOff.DICT_REGION_KEY in self.event ):
+      raise Exception(f'{self.name} event parameter key is not key:{OnOff.DICT_REGION_KEY}')
+
     return self.event
 
 
@@ -51,7 +57,6 @@ class OnOff(metaclass=ABCMeta):
     '''
 
     # 初期処理
-    logger.info(f"{self.name} 開始")
     self.event = self._check_event_dict()
     self.event = self._set_date()
     # on, off 呼出し

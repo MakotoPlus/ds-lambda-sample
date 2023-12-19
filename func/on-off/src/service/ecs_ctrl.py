@@ -57,7 +57,7 @@ class EcsCtrl(OnOff):
     '''
     ECS Service Start
     '''
-    client = boto3.client('ecs')
+    client = boto3.client('ecs', region_name=self.event[OnOff.DICT_REGION_KEY])
     ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:      
       ret = client.update_service(
@@ -71,7 +71,7 @@ class EcsCtrl(OnOff):
     '''
     ECS Service Stop
     '''
-    client = boto3.client('ecs')
+    client = boto3.client('ecs', region_name=self.event[OnOff.DICT_REGION_KEY])
     ecs_service_values = self.event[EcsCtrl.DICT_EVENT_ECS_SERVICE_KEY]
     for ecs_service_value in ecs_service_values:      
       ret = client.update_service(
@@ -79,7 +79,7 @@ class EcsCtrl(OnOff):
            service=ecs_service_value[self.DICT_SERVICE_KEY],
            desiredCount = 0
         )
-      logger.info(f'{self.name}停止処理を実行しました。 '  \
+      logger.debug(f'{self.name}停止処理を実行しました。 '  \
         f'cluster={ecs_service_value[self.DICT_CLUSTER_KEY]} ' \
         f'service={ecs_service_value[self.DICT_SERVICE_KEY]}')
 
