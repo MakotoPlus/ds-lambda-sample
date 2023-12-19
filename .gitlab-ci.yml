@@ -109,11 +109,11 @@ deploy_nginx_in_django:
       ${JSON_FILE}
 
     # 環境変数読込
-    - env_values = $(cat "environment.txt")
+    #- env_values = $(cat "environment.txt")
     - echo "-----------------------------------------"
-    - echo $env_values
+    - $(cat "environment.txt")
     - echo "-----------------------------------------"
-    - cat ${JSON_FILE} | jq ".taskDefinition" | jq ".containerDefinitions[].environmentFiles|=$env_values" > ${JSON_FILE}
+    - cat ${JSON_FILE} | jq ".taskDefinition" | jq ".containerDefinitions[].environmentFiles|=$(cat 'environment.txt')" > ${JSON_FILE}
     - cat ${JSON_FILE}
 
     # 定義更新PUSH
