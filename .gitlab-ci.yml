@@ -107,6 +107,15 @@ deploy_nginx_in_django:
     - >
       sed -i -e "s|\"image\": \".*${ECR_REPOSITORY_NGINX}.*,|\"image\": \"${ECR_REPOSITORY_NGINX}:${CI_COMMIT_SHORT_SHA}\",|g"
       ${JSON_FILE}
+
+    # 環境変数読込
+    - env_values = $(cat "environment.txt")
+    - echo "-----------------------------------------"
+    - echo $env_values
+    - echo "-----------------------------------------"
+    - cat ${JSON_FILE} | jq ".taskDefinition" | jq ".containerDefinitions[].environmentFiles|=$env_values" > ${JSON_FILE}
+    - cat ${JSON_FILE}
+
     # 定義更新PUSH
     - aws ecs register-task-definition --family ${CI_AWS_ECS_TASK_DEFINITION} --cli-input-json file://${JSON_FILE}
 
